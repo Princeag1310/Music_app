@@ -9,11 +9,11 @@ import {
   Play,
   Pause,
   MoreHorizontal,
-  Heart,
   Share2,
   Shuffle,
 } from "lucide-react";
 import Menu from "../Menu";
+import Like from "../ui/Like";
 
 function Artist() {
   const [data, setData] = useState();
@@ -334,6 +334,10 @@ function Artist() {
                       <div className="text-sm text-muted-foreground font-mono">
                         {Math.floor(song.duration / 60)}:
                         {(song.duration % 60).toString().padStart(2, "0")}
+                      </div>
+
+                      <div className="flex-shrink-0 w-8 flex items-center justify-center">
+                        <Like songId={song.id} />
                       </div>
 
                       {/* Menu Button */}

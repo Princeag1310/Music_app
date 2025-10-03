@@ -12,7 +12,7 @@ import { fetchFireStore } from "../Api";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { setIsUser, setPlaylist } = useStore();
+  const { setIsUser, setPlaylist, setLikedSongs } = useStore();
   useEffect(() => {
     const auth = getAuth(app);
     const pathName = `/search?searchtxt=${
@@ -23,7 +23,7 @@ export default function Home() {
         setIsUser(true);
       }
     });
-    fetchFireStore(setPlaylist);
+    fetchFireStore(setPlaylist, setLikedSongs);
 
     navigate(pathName);
   }, []);
