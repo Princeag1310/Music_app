@@ -251,6 +251,11 @@ function Artist() {
                         </h3>
                       </div>
 
+                      {/* Like Button - Mobile */}
+                      <div className="flex-shrink-0 w-8 flex items-center justify-center">
+                        <Like songId={song.id} />
+                      </div>
+
                       {/* Menu Button - Always visible on mobile for better UX */}
                       <div className="flex-shrink-0">
                         <button

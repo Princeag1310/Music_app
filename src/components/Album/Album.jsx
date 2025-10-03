@@ -282,6 +282,11 @@ export default function Album() {
                         </div>
                       </div>
 
+                      {/* Like Button - Mobile */}
+                      <div className="flex-shrink-0 w-8 flex items-center justify-center">
+                        <Like songId={song.id} />
+                      </div>
+
                       {/* Menu Button */}
                       <div className="flex-shrink-0">
                         <button

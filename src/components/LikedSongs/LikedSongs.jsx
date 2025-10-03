@@ -12,6 +12,8 @@ export default function LikedSongs() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const abortController = new AbortController();
+    
     const fetchLikedSongsData = async () => {
       if (likedSongs.length === 0) {
         setIsLoading(false);
@@ -24,17 +26,27 @@ export default function LikedSongs() {
         const songIds = likedSongs.join(',');
         const response = await Api(`/api/songs?ids=${songIds}`);
         
-        if (response.data.success) {
+        // Check if component is still mounted before updating state
+        if (!abortController.signal.aborted && response.data.success) {
           setLikedSongsData(response.data.data);
         }
       } catch (error) {
-        console.error("Error fetching liked songs:", error);
+        if (!abortController.signal.aborted) {
+          console.error("Error fetching liked songs:", error);
+        }
       } finally {
-        setIsLoading(false);
+        if (!abortController.signal.aborted) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchLikedSongsData();
+    
+    // Cleanup function to abort request if component unmounts or dependencies change
+    return () => {
+      abortController.abort();
+    };
   }, [likedSongs]);
 
   function handleSongClick(song) {
