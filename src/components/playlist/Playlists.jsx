@@ -16,7 +16,7 @@ export default function Playlist({ setPopover }) {
   const user = getAuth(app)?.currentUser;
   const [isDialog, setIsDialog] = useState(false);
   const input = useRef(null);
-  const { playlist, setPlaylist, emptyPlaylist } = useStore();
+  const { playlist, setPlaylist, emptyPlaylist, setLikedSongs } = useStore();
   async function handleSubmit(e) {
 
     e.preventDefault();
@@ -27,7 +27,7 @@ export default function Playlist({ setPopover }) {
       songs: arrayUnion(),
     });
     emptyPlaylist()
-    fetchFireStore(setPlaylist)
+    fetchFireStore(setPlaylist, setLikedSongs)
   }
   const handleClick = (list) => {
     const id = list?.id;

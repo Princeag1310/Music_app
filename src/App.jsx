@@ -4,6 +4,7 @@ import Artist from "./components/Artist/artist";
 import SearchComponent from "./components/search/SearchResult";
 import Album from "./components/Album/Album";
 import Plylistinfo from "./components/playlist/Plylistinfo";
+import LikedSongs from "./components/LikedSongs/LikedSongs";
 
 function App() {
   const router = createBrowserRouter([
@@ -26,6 +27,10 @@ function App() {
         {
           path: "/playlist",
           element: <Plylistinfo />,
+        },
+        {
+          path: "/liked",
+          element: <LikedSongs />,
         },
       ],
     },

@@ -56,11 +56,12 @@ export const useFetch = create((set) => ({
   },
 }));
 
-export const useStore = create((set) => ({
+export const useStore = create((set, get) => ({
   playlist: [],
   musicId: null,
   isPlaying: false,
   queue: [],
+  likedSongs: [],
   setPlaylist: (prope) =>
     set((state) => ({
       playlist: [...state.playlist, prope],
@@ -73,4 +74,17 @@ export const useStore = create((set) => ({
   setDialogOpen: (prop) => set({ dialogOpen: prop }),
   setIsPlaying: (prop) => set({ isPlaying: prop }),
   setQueue: (prop) => set({ queue: prop }),
+  setLikedSongs: (songs) => set({ likedSongs: songs }),
+  addLikedSong: (songId) => 
+    set((state) => ({
+      likedSongs: [...state.likedSongs, songId]
+    })),
+  removeLikedSong: (songId) =>
+    set((state) => ({
+      likedSongs: state.likedSongs.filter(id => id !== songId)
+    })),
+  isLiked: (songId) => {
+    const state = get();
+    return state.likedSongs.includes(songId);
+  },
 }));

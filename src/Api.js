@@ -13,9 +13,12 @@ import {
   deleteDoc,
   updateDoc,
   arrayUnion,
+  arrayRemove,
+  getDoc,
+  setDoc,
 } from "firebase/firestore";
 import { app, db } from "./Auth/firebase";
-export const fetchFireStore = (setPlaylist) => {
+export const fetchFireStore = (setPlaylist, setLikedSongs) => {
   let auth = getAuth(app);
   onAuthStateChanged(auth, async (user) => {
     if (user?.uid) {
@@ -24,6 +27,25 @@ export const fetchFireStore = (setPlaylist) => {
       docSnap.forEach((e) => {
         setPlaylist({ id: e.id, data: e.data() });
       });
+
+      try {
+        const userDocRef = doc(db, "users", user?.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const likedSongs = userData.likedSongs || [];
+          setLikedSongs(likedSongs);
+        } else {
+          await setDoc(userDocRef, {
+            likedSongs: [],
+            createdAt: new Date().toISOString(),
+          });
+          setLikedSongs([]);
+        }
+      } catch (error) {
+        console.error("Error fetching liked songs:", error);
+        setLikedSongs([]);
+      }
     }
   });
 };
@@ -51,4 +73,68 @@ export function deletePlaylist(playlistId,playlists,setPlaylist,emptyPlaylist) {
         setPlaylist(e)
     }
   })
+}
+
+export function addToLikedSongs(songId) {
+  const auth = getAuth(app);
+  const user = auth?.currentUser;
+  
+  if (!user) {
+    return;
+  }
+  
+  if (user?.uid) {
+    const userDocRef = doc(db, "users", user?.uid);
+    setDoc(userDocRef, {
+      likedSongs: arrayUnion(songId),
+    }, { merge: true }).catch((error) => {
+      console.error("Error adding to liked songs:", error);
+    });
+  }
+}
+
+export function removeFromLikedSongs(songId) {
+  const auth = getAuth(app);
+  const user = auth?.currentUser;
+  
+  if (!user) {
+    return;
+  }
+  
+  if (user?.uid) {
+    const userDocRef = doc(db, "users", user?.uid);
+    setDoc(userDocRef, {
+      likedSongs: arrayRemove(songId),
+    }, { merge: true }).catch((error) => {
+      console.error("Error removing from liked songs:", error);
+    });
+  }
+}
+
+export async function fetchLikedSongs() {
+  const auth = getAuth(app);
+  const user = auth?.currentUser;
+  if (user?.uid) {
+    try {
+      const userDocRef = doc(db, "users", user?.uid);
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists()) {
+        return userDoc.data().likedSongs || [];
+      }
+    } catch (error) {
+      console.error("Error fetching liked songs:", error);
+    }
+  }
+  return [];
+}
+
+export async function fetchSongsByIds(songIds) {
+  try {
+    const idsString = songIds.join(',');
+    const response = await Api(`/api/songs?ids=${idsString}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching songs by IDs:", error);
+    return { success: false, data: [] };
+  }
 }
