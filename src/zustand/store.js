@@ -95,9 +95,11 @@ export const useStore = create((set, get) => ({
   setMusicId: (id) => {
     const { queue } = get();
     const newIndex = queue.findIndex(song => song.id === id);
+    const currentSong = queue.find(song => song.id === id);
     
     set({ 
       musicId: id, 
+      currentSong: currentSong || null, // Set current song object from queue
       currentIndex: newIndex >= 0 ? newIndex : 0, // Update index if song found in queue
       played: 0, // Reset progress when switching songs
       isPlaying: false // Stop current song when switching
