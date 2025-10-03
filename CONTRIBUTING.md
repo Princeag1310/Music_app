@@ -96,6 +96,7 @@ docs: update contributing guidelines
 4. Include in the PR description:
    - What the change does and why
    - Screenshots, GIFs, or a short video if UI-related
+   - Giving a demo is necessary for every PR raised.
 
 5. Keep PRs small and focused for easier review.
 
