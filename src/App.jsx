@@ -34,6 +34,10 @@ function App() {
           path: "/liked",
           element: <LikedSongs />,
         },
+        {
+          path: "/liked",
+          element: <LikedSongs />,
+        },
       ],
     },
   ]);
