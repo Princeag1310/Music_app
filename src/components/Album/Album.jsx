@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Play, Plus, MoreHorizontal, Clock, Pause, Share2, Shuffle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Play, Plus, Clock, Pause, Share2, Shuffle } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import Api from "../../Api";
 import { useStore } from "../../zustand/store";
@@ -7,6 +7,7 @@ import { getImageColors } from "../color/ColorGenrator";
 import { ScrollArea } from "../ui/scroll-area";
 import Menu from "../Menu";
 import Like from "../ui/Like";
+import { toast } from "sonner";
 
 export default function Album() {
   const [albumData, setAlbumData] = useState(null);
@@ -32,7 +33,9 @@ export default function Album() {
           }
         );
       } catch (error) {
-        console.log(error);
+        toast.error("Failed to load album data.");
+        console.error("Album API fetch error:", error);
+        setAlbumData(null); // Ensure albumData is null on error to trigger "Album not found" UI
       } finally {
         setIsLoading(false);
       }
@@ -68,7 +71,8 @@ export default function Album() {
   }
 
   // Calculate total duration
-  const totalDuration = songs?.reduce((acc, song) => acc + song.duration, 0) || 0;
+  const totalDuration =
+    songs?.reduce((acc, song) => acc + song.duration, 0) || 0;
   const totalMinutes = Math.floor(totalDuration / 60);
   const totalHours = Math.floor(totalMinutes / 60);
   const displayMinutes = totalMinutes % 60;
@@ -89,7 +93,9 @@ export default function Album() {
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-center space-y-4">
           <p className="text-xl text-muted-foreground">Album not found</p>
-          <p className="text-sm text-muted-foreground">Please try again later</p>
+          <p className="text-sm text-muted-foreground">
+            Please try again later
+          </p>
         </div>
       </div>
     );
@@ -152,7 +158,9 @@ export default function Album() {
                   <span>{songs?.length || 0} songs</span>
                   <span>•</span>
                   <span>
-                    {totalHours > 0 ? `${totalHours}h ${displayMinutes}m` : `${totalMinutes}m`}
+                    {totalHours > 0
+                      ? `${totalHours}h ${displayMinutes}m`
+                      : `${totalMinutes}m`}
                   </span>
                 </div>
 
@@ -230,7 +238,9 @@ export default function Album() {
                             handleSongClick(song);
                           }}
                           className={`w-8 h-8 flex items-center justify-center transition-all duration-200 ${
-                            song.id === musicId ? "block" : "hidden group-hover:block"
+                            song.id === musicId
+                              ? "block"
+                              : "hidden group-hover:block"
                           }`}
                         >
                           {isPlaying && song.id === musicId ? (
@@ -251,14 +261,16 @@ export default function Album() {
                       <div className="flex-1 min-w-0 pr-2">
                         <h3
                           className={`font-medium text-sm leading-5 ${
-                            song.id === musicId ? "text-primary" : "text-foreground"
+                            song.id === musicId
+                              ? "text-primary"
+                              : "text-foreground"
                           }`}
                           style={{
-                            display: '-webkit-box',
+                            display: "-webkit-box",
                             WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            wordBreak: 'break-word'
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                            wordBreak: "break-word",
                           }}
                         >
                           {song.name}
@@ -300,7 +312,9 @@ export default function Album() {
                             handleSongClick(song);
                           }}
                           className={`w-6 h-6 flex items-center justify-center transition-all duration-200 ${
-                            song.id === musicId ? "block" : "hidden group-hover:block"
+                            song.id === musicId
+                              ? "block"
+                              : "hidden group-hover:block"
                           }`}
                         >
                           {isPlaying && song.id === musicId ? (
@@ -321,7 +335,9 @@ export default function Album() {
                       <div className="min-w-0">
                         <h3
                           className={`font-medium truncate ${
-                            song.id === musicId ? "text-primary" : "text-foreground"
+                            song.id === musicId
+                              ? "text-primary"
+                              : "text-foreground"
                           }`}
                           title={song.name}
                         >

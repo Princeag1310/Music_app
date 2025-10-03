@@ -34,7 +34,17 @@ To get a local copy up and running, follow these simple steps.
    ```sh
    npm install
    ```
-3. Start the development server
+
+### Configuration
+
+1. Create a `.env` file in the root of the project.
+2. Copy the contents of `.env.example` to your new `.env` file.
+   ```sh
+   cp .env.example .env
+   ```
+3. Update the `.env` file with your Firebase project credentials.
+
+4. Start the development server
    ```sh
    npm run dev
    ```

@@ -8,6 +8,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Card, CardContent } from "../ui/card";
 import { useStore } from "../../zustand/store";
 import { Play, Heart, Clock, Pause } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Plylistinfo() {
   const url = useLocation();
@@ -21,14 +22,26 @@ export default function Plylistinfo() {
   useEffect(() => {
     setPlaylistData([]);
     async function getFireStore() {
-      const docRef = doc(db, "users", user?.uid, "playlists", playlistId);
-      const data = await getDoc(docRef);
-      if (data.exists()) {
-        setPlaylistName(data.data().name);
-        data.data().songs.forEach(async (element) => {
-          const res = await Api(`/api/songs/${element}`);
-          setPlaylistData((prevData) => [...prevData, res.data.data[0]]);
-        });
+      try {
+        const docRef = doc(db, "users", user?.uid, "playlists", playlistId);
+        const data = await getDoc(docRef);
+        if (data.exists()) {
+          setPlaylistName(data.data().name);
+          for (const element of data.data().songs) {
+            try {
+              const res = await Api(`/api/songs/${element}`);
+              setPlaylistData((prevData) => [...prevData, res.data.data[0]]);
+            } catch (apiError) {
+              toast.error(`Failed to fetch song: ${element}`);
+              console.error(`Error fetching song ${element}:`, apiError);
+            }
+          }
+        } else {
+          toast.error("Playlist not found.");
+        }
+      } catch (error) {
+        toast.error("Failed to load playlist information.");
+        console.error("Firestore get playlist info error:", error);
       }
     }
     getFireStore();
