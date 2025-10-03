@@ -16,12 +16,18 @@ export default function LikedSongs() {
     
     const fetchLikedSongsData = async () => {
       if (likedSongs.length === 0) {
-        setIsLoading(false);
+        if (!abortController.signal.aborted) {
+          setLikedSongsData([]);
+          setIsLoading(false);
+        }
         return;
       }
 
       try {
-        setIsLoading(true);
+      if (!abortController.signal.aborted) {
+        setLikedSongsData([]);
+        setIsLoading(false);
+      }
         // Join song IDs with comma for API request
         const songIds = likedSongs.join(',');
         const response = await Api(`/api/songs?ids=${songIds}`);
