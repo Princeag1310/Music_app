@@ -58,8 +58,9 @@ export default function LikedSongs() {
   function handleSongClick(song) {
     if (song.id !== musicId) {
       setMusicId(song.id);
-    } else {
       setIsPlaying(true);
+    } else {
+      setIsPlaying(!isPlaying);
     }
   }
 
