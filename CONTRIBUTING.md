@@ -4,16 +4,16 @@ Thank you for your interest in contributing to **Music App**! This guide will he
 
 ## Table of Contents
 
-- [📥 How to Contribute](#-how-to-contribute)
-- [🌿 Branch Naming Conventions](#-branch-naming-conventions)
-- [✍️ Commit Message Format](#️-commit-message-format)
-- [🔀 Submitting Pull Requests](#-submitting-pull-requests)
-- [🐛 Reporting Issues](#-reporting-issues)
-- [🎨 Code Style, Docs & Testing](#-code-style-docs--testing)
-- [📌 General Guidelines](#-general-guidelines)
-- [💬 Communication](#-communication)
+- [ How to Contribute](#-how-to-contribute)
+- [ Branch Naming Conventions](#-branch-naming-conventions)
+- [ Commit Message Format](-commit-message-format)
+- [ Submitting Pull Requests](#-submitting-pull-requests)
+- [ Reporting Issues](#-reporting-issues)
+- [ Code Style, Docs & Testing](#-code-style-docs--testing)
+- [ General Guidelines](#-general-guidelines)
+- [ Communication](#-communication)
 
-## 📥 How to Contribute
+##  How to Contribute
 
 1. **Fork the repository**  
    Click the **Fork** button at the top of this repository.
@@ -41,7 +41,7 @@ Thank you for your interest in contributing to **Music App**! This guide will he
    npm run dev
    ```
 
-## 🌿 Branch Naming Conventions
+##  Branch Naming Conventions
 
 Use descriptive branch names for clarity:
 
@@ -57,7 +57,7 @@ fix/auth-token-refresh
 docs/update-readme
 ```
 
-## ✍️ Commit Message Format
+##  Commit Message Format
 
 Follow the **Conventional Commits** style:
 
@@ -75,14 +75,14 @@ Follow the **Conventional Commits** style:
 - `test:` → add/modify tests
 - `chore:` → tooling/config changes
 
-✅ **Examples:**
+ **Examples:**
 ```
 feat: add playlist creation page
 fix: resolve audio playback bug on mobile
 docs: update contributing guidelines
 ```
 
-## 🔀 Submitting Pull Requests
+##  Submitting Pull Requests
 
 1. Ensure your branch is **up to date** with `main`.
 
@@ -99,7 +99,7 @@ docs: update contributing guidelines
 
 5. Keep PRs small and focused for easier review.
 
-## 🐛 Reporting Issues
+##  Reporting Issues
 
 When opening an issue, please:
 
@@ -109,12 +109,11 @@ When opening an issue, please:
 - Add screenshots/logs if helpful.
 - Tag appropriately (`bug`, `enhancement`, `question`).
 
-## 🎨 Code Style, Docs & Testing
+##  Code Style, Docs & Testing
 
 - **Frontend:** React + Vite + Tailwind CSS
 - **State Management:** React hooks/context (or Zustand if added later)
 - **Linting/Formatting:** Prettier + ESLint
-- **Testing:** (if applicable, add tests under `tests/` or `__tests__/`)
 
 **Before committing:**
 ```bash
@@ -122,7 +121,7 @@ npm run lint
 npm run format
 ```
 
-## 📌 General Guidelines
+##  General Guidelines
 
 - Keep components small and reusable.
 - Follow **Tailwind CSS best practices** for styling.
@@ -130,7 +129,7 @@ npm run format
 - Update **README.md** or inline docs if adding new features.
 - Make sure UI is responsive and accessible.
 
-## 💬 Communication
+##  Communication
 
 - Use GitHub Issues for discussions before starting large changes.
 - Be clear, respectful, and collaborative in reviews.
@@ -139,4 +138,4 @@ npm run format
 ---
 
 ✨ **Thanks for helping make Music App better!**  
-Whether it's a small bug fix or a big new feature, your contributions are valued. 🚀
+Whether it's a small bug fix or a big new feature, your contributions are valued. 
