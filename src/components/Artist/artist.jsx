@@ -1,19 +1,12 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Api from "../../Api";
-import { Card, CardContent } from "../ui/card";
 import { getImageColors } from "../color/ColorGenrator";
 import { ScrollArea } from "../ui/scroll-area";
 import { useStore } from "../../zustand/store";
-import {
-  Play,
-  Pause,
-  MoreHorizontal,
-  Heart,
-  Share2,
-  Shuffle,
-} from "lucide-react";
+import { Play, Pause, Share2, Shuffle } from "lucide-react";
 import Menu from "../Menu";
+import { toast } from "sonner";
 
 function Artist() {
   const [data, setData] = useState();
@@ -39,7 +32,9 @@ function Artist() {
           }
         );
       } catch (error) {
+        toast.error("Failed to load artist data.");
         console.error("Error fetching artist data:", error);
+        setData(null); // Ensure data is null on error to trigger "Artist not found" UI
       } finally {
         setIsLoading(false);
       }
@@ -244,11 +239,11 @@ function Artist() {
                               : "text-foreground"
                           }`}
                           style={{
-                            display: '-webkit-box',
+                            display: "-webkit-box",
                             WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            wordBreak: 'break-word'
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                            wordBreak: "break-word",
                           }}
                         >
                           {song.name}
