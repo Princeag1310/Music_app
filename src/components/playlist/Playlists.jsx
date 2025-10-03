@@ -11,6 +11,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { useNavigate, createSearchParams } from "react-router-dom";
 import { deletePlaylist } from "../../Api";
 import { fetchFireStore } from "../../Api";
+import { toast } from "sonner";
 
 export default function Playlist({ setPopover }) {
   const navigate = useNavigate();
@@ -21,19 +22,25 @@ export default function Playlist({ setPopover }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    
+
     if (!input.current?.value?.trim()) {
       return; // Don't submit if input is empty
     }
 
     setIsDialog(false);
-    const collectionRef = collection(db, "users", user?.uid, "playlists");
-    await addDoc(collectionRef, {
-      name: input.current.value,
-      songs: arrayUnion(),
-    });
-    emptyPlaylist();
-    fetchFireStore(setPlaylist);
+    try {
+      const collectionRef = collection(db, "users", user?.uid, "playlists");
+      await addDoc(collectionRef, {
+        name: input.current.value,
+        songs: [],
+      });
+      emptyPlaylist();
+      fetchFireStore(setPlaylist);
+      toast.success("Playlist created successfully!");
+    } catch (error) {
+      toast.error("Failed to create playlist.");
+      console.error("Firestore add playlist error:", error);
+    }
   }
 
   const handleClick = (list) => {
@@ -54,7 +61,7 @@ export default function Playlist({ setPopover }) {
   return (
     <>
       <h1 className="text-3xl border-b-2 p-2">Playlist</h1>
-      
+
       <Dialog open={isDialog} onOpenChange={setIsDialog}>
         <DialogContent>
           <DialogTitle>Name is needed to create Playlist</DialogTitle>
@@ -76,7 +83,10 @@ export default function Playlist({ setPopover }) {
             key={list.id}
             className="p-2 rounded-lg w-full hover:bg-secondary flex"
           >
-            <p onClick={() => handleClick(list)} className="w-full cursor-pointer">
+            <p
+              onClick={() => handleClick(list)}
+              className="w-full cursor-pointer"
+            >
               {list.data.name}
             </p>
             <Trash2
@@ -91,9 +101,7 @@ export default function Playlist({ setPopover }) {
       </ScrollArea>
 
       <div className="flex justify-center">
-        <Button onClick={handleOpenDialog}>
-          Add playlist
-        </Button>
+        <Button onClick={handleOpenDialog}>Add playlist</Button>
       </div>
     </>
   );
