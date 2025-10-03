@@ -3,6 +3,8 @@ import { Button } from "../ui/button";
 import { Home, Menu, X, List, User, Baby } from "lucide-react";
 import { useStore } from "../../zustand/store";
 import { Dialog, DialogContent } from "../ui/dialog";
+import { ThemeToggle } from "../ThemeToggle.jsx";
+
 import AuthTab from "../../Auth/AuthTab";
 import { signOut, getAuth } from "firebase/auth";
 import {
@@ -82,7 +84,9 @@ const Sidebar = () => {
             <li>
               <Button
                 onClick={() => {
-                  navigate(`/search?searchTxt=${localStorage.getItem("search")}`);
+                  navigate(
+                    `/search?searchTxt=${localStorage.getItem("search")}`
+                  );
                   setIsOpen(false);
                 }}
                 variant="ghost"
@@ -114,7 +118,10 @@ const Sidebar = () => {
             </li>
 
             <li>
-              <Button variant="ghost" className="w-full justify-start text-lg py-4 hover:bg-accent">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-lg py-4 hover:bg-accent"
+              >
                 <a
                   href="https://anmol.pro/"
                   target="_blank"
@@ -156,8 +163,11 @@ const Sidebar = () => {
             )}
           </ul>
 
-          <div className="p-4 border-t text-sm text-muted-foreground">
-            © 2024 Anmol Singh
+          <div className="p-4 border-t flex items-center justify-between">
+            <ThemeToggle /> {/* Theme button */}
+            <span className="text-sm text-muted-foreground">
+              © 2024 Anmol Singh
+            </span>
           </div>
         </nav>
       </div>
