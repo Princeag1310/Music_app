@@ -1,8 +1,34 @@
+/**
+ * ThemeContext.jsx
+ *
+ * Provides a centralized theme management system for the Music App.
+ * Supports Light, Dark, and System themes, as well as preset color themes.
+ *
+ * Exports:
+ * - ThemeProvider: React context provider wrapping the app and managing theme state.
+ * - useTheme: Custom hook to access current theme and theme setter.
+ *
+ * Features:
+ * - Persists theme selection in localStorage.
+ * - Automatically applies system theme if 'system' is selected.
+ * - Updates CSS variables dynamically for custom themes.
+ * - Throws an error if useTheme is called outside ThemeProvider.
+ */
+
+/**
+ * ThemeContext.jsx
+ *
+ * Centralized theme management for the Music App.
+ * Supports light, dark, system, and preset color themes.
+ * Persists theme selection and applies CSS variables dynamically.
+ */
+
 import { createContext, useContext, useEffect, useState } from "react";
 
 const ThemeContext = createContext();
 
-const presetThemes = {
+// Full theme definitions
+export const presetThemes = {
   light: {
     "--background": "0 0% 100%",
     "--foreground": "0 0% 3.9%",
@@ -13,22 +39,13 @@ const presetThemes = {
     "--accent": "0 0% 96.1%",
   },
   dark: {
-    "--background": "0 0% 6%",       // dark background
-    "--foreground": "0 0% 98%",      // light text
+    "--background": "0 0% 6%",
+    "--foreground": "0 0% 98%",
     "--card": "0 0% 10%",
     "--card-foreground": "0 0% 98%",
-    "--primary": "220 80% 60%",      // blue accent
+    "--primary": "220 80% 60%",
     "--secondary": "0 0% 20%",
     "--accent": "220 80% 60%",
-  },
-  Default: {
-    "--background": "0 0% 100%",
-    "--foreground": "0 0% 3.9%",
-    "--card": "0 0% 100%",
-    "--card-foreground": "0 0% 3.9%",
-    "--primary": "0 0% 9%",
-    "--secondary": "0 0% 96.1%",
-    "--accent": "0 0% 96.1%",
   },
   Purple: {
     "--background": "270 95.2% 75.3%",
@@ -75,30 +92,45 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     const root = window.document.documentElement;
+    const allVars = [
+      "--background",
+      "--foreground",
+      "--card",
+      "--card-foreground",
+      "--primary",
+      "--secondary",
+      "--accent",
+    ];
 
-    // Clear old variables
-    Object.values(presetThemes).forEach((themeVars) => {
-      Object.keys(themeVars).forEach((varName) => {
-        root.style.removeProperty(varName);
-      });
-    });
+    // Clear previous variables
+    allVars.forEach((v) => root.style.removeProperty(v));
 
-    // Resolve system -> light/dark
-    const themeToApply =
-      theme === "system"
-        ? window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
-        : theme;
+    let themeToApply = theme;
 
-    // Apply CSS variables of the theme
-    const selectedTheme = presetThemes[themeToApply];
-    if (selectedTheme) {
-      Object.entries(selectedTheme).forEach(([key, value]) => {
-        root.style.setProperty(key, value);
-      });
+    // Handle system theme
+    if (theme === "system") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      themeToApply = mediaQuery.matches ? "dark" : "light";
+
+      const listener = (e) => {
+        const newTheme = e.matches ? "dark" : "light";
+        const selected = presetThemes[newTheme] || presetThemes.light;
+        Object.entries(selected).forEach(([key, value]) =>
+          root.style.setProperty(key, value)
+        );
+      };
+
+      mediaQuery.addEventListener("change", listener);
+      return () => mediaQuery.removeEventListener("change", listener);
     }
 
+    // Apply selected theme or fallback
+    const selectedTheme = presetThemes[themeToApply] || presetThemes.light;
+    Object.entries(selectedTheme).forEach(([key, value]) =>
+      root.style.setProperty(key, value)
+    );
+
+    // Persist selection
     localStorage.setItem("theme", theme);
   }, [theme]);
 
@@ -111,7 +143,7 @@ export const ThemeProvider = ({ children }) => {
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;

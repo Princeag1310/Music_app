@@ -1,3 +1,19 @@
+/**
+ * ThemeToggle.jsx
+ *
+ * Component that allows users to switch between multiple themes.
+ *
+ * Features:
+ * - Supports all themes: light, dark, system, Default, Purple, Blue, Green, Orange.
+ * - Displays an icon corresponding to the current theme.
+ * - Updates the theme context on selection.
+ * - Works with ThemeContext to persist and apply theme globally.
+ *
+ * Usage:
+ *   import { ThemeToggle } from '@/components/ThemeToggle';
+ *
+ *   <ThemeToggle />
+ */
 
 import {
   Menubar,
@@ -14,7 +30,6 @@ const allThemes = [
   "light",
   "dark",
   "system",
-  "Default",
   "Purple",
   "Blue",
   "Green",

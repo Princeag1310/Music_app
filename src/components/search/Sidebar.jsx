@@ -6,20 +6,19 @@ import { Dialog, DialogContent } from "../ui/dialog";
 import { ThemeToggle } from "../ThemeToggle.jsx";
 
 import AuthTab from "../../Auth/AuthTab";
-import { signOut, getAuth } from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { auth } from "../../Auth/firebase"; 
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Playlist from "../playlist/Playlists";
-import { app } from "../../Auth/firebase";
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const sidebarRef = useRef(null);
-  const auth = getAuth(app);
   const [isOpen, setIsOpen] = useState(false);
   const [popover, setPopover] = useState(false);
 

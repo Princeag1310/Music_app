@@ -4,11 +4,11 @@ import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { Label } from "../components/ui/label";
 import { useStore } from "../zustand/store";
-import { app } from "./firebase";
+import { auth } from "./firebase";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const auth = getAuth(app);
+
   const email = useRef();
   const password = useRef();
   const { setIsUser, setDialogOpen } = useStore();
