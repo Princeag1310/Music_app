@@ -19,7 +19,6 @@ export default function Playlist({ setPopover }) {
   const [isDialog, setIsDialog] = useState(false);
   const input = useRef(null);
   const { playlist, setPlaylist, emptyPlaylist, setLikedSongs } = useStore();
-  const { playlist, setPlaylist, emptyPlaylist, setLikedSongs } = useStore();
   async function handleSubmit(e) {
     e.preventDefault();
 
