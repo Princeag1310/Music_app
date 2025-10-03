@@ -13,10 +13,10 @@ function Login() {
   const password = useRef();
   const { setIsUser, setDialogOpen } = useStore();
   const navigate = useNavigate();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      signInWithEmailAndPassword(
+     await signInWithEmailAndPassword(
         auth,
         email.current.value,
         password.current.value

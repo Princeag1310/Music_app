@@ -2,9 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* --------------------------
-   THEME VARIABLES
----------------------------*/
+
 @layer base {
   :root {
     /* Light Theme */
@@ -80,9 +78,7 @@
   }
 }
 
-/* --------------------------
-   SCROLLBAR STYLING
----------------------------*/
+
 ::-webkit-scrollbar {
   width: 12px;
 }
@@ -97,9 +93,6 @@
   background: #555;
 }
 
-/* --------------------------
-   OPTIONAL FLOATING ELEMENTS
----------------------------*/
 .float_debouncer {
   position: absolute;
   left: 0;

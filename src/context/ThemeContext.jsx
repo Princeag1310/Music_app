@@ -125,11 +125,12 @@ export const ThemeProvider = ({ children }) => {
     }
 
     // Apply selected theme or fallback
-    const selectedTheme = presetThemes[themeToApply] || presetThemes.light;
-    Object.entries(selectedTheme).forEach(([key, value]) =>
-      root.style.setProperty(key, value)
+    const customColors = JSON.parse(
+      localStorage.getItem("customColors") || "{}"
     );
-
+    Object.entries(customColors).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
     // Persist selection
     localStorage.setItem("theme", theme);
   }, [theme]);

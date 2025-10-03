@@ -117,9 +117,7 @@ const Sidebar = () => {
             </li>
 
             <li>
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-lg py-4 hover:bg-accent"
+              <Button asChild variant="ghost" className="w-full justify-start text-lg py-4 hover:bg-accent"
               >
                 <a
                   href="https://anmol.pro/"

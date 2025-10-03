@@ -67,13 +67,13 @@ export function ThemeCustomizer() {
     root.style.setProperty(`--${colorKey}`, hsl);
 
     // Save as a "custom" theme object in localStorage
-    const currentTheme = {
-      ...presetThemes.light, // base to fill missing variables
-      [`--${colorKey}`]: hsl,
-    };
+    const customColors = JSON.parse(
+      localStorage.getItem("customColors") || "{}"
+    );
+    customColors[colorKey] = hsl;
+    localStorage.setItem("customColors", JSON.stringify(customColors));
     setSelectedTheme("Custom");
-    setTheme("Custom");
-    localStorage.setItem("theme", JSON.stringify(currentTheme));
+    // Note: don't call setTheme("Custom") since it's not in presetThemes
   };
 
   return (
@@ -186,5 +186,5 @@ function hexToHSL(hex) {
     }
   }
 
-  return `${Math.round(h)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+   return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
 }

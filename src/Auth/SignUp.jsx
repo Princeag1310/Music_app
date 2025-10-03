@@ -12,11 +12,11 @@ function SignUp() {
   const confPassword = useRef();
   const { setIsUser , setDialogOpen } = useStore();
   const navigate = useNavigate()
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (password.current.value === confPassword.current.value) {
       try {
-        createUserWithEmailAndPassword(
+       await createUserWithEmailAndPassword(
           auth,
           email.current.value,
           password.current.value
@@ -38,7 +38,7 @@ function SignUp() {
       >
         <div className="w-full">
           <Label>Email</Label>
-          <Input type="email " ref={email} />
+          <Input type= "email" ref={email} />
         </div>
         <div className="w-full">
           <Label>Password</Label>
