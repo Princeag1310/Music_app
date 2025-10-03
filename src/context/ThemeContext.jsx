@@ -111,7 +111,18 @@ export const ThemeProvider = ({ children }) => {
         Object.entries(selected).forEach(([key, value]) =>
           root.style.setProperty(key, value)
         );
+
+         try {
+            const customColors = JSON.parse(localStorage.getItem("customColors") || "{}");
+           Object.entries(customColors).forEach(([key, value]) =>
+             root.style.setProperty(`--${key}`, value)
+            );
+          } catch (e) {
+            console.warn("Failed to apply custom colors:", e);
+          }
       };
+
+    
 
       mediaQuery.addEventListener("change", listener);
       return () => mediaQuery.removeEventListener("change", listener);
