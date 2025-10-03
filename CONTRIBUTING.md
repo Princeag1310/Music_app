@@ -4,14 +4,14 @@ Thank you for your interest in contributing to **Music App**! This guide will he
 
 ## Table of Contents
 
-- [ How to Contribute](#-how-to-contribute)
-- [ Branch Naming Conventions](#-branch-naming-conventions)
-- [ Commit Message Format](-commit-message-format)
-- [ Submitting Pull Requests](#-submitting-pull-requests)
-- [ Reporting Issues](#-reporting-issues)
-- [ Code Style, Docs & Testing](#-code-style-docs--testing)
-- [ General Guidelines](#-general-guidelines)
-- [ Communication](#-communication)
+- [ How to Contribute](#how-to-contribute)
+- [ Branch Naming Conventions](#branch-naming-conventions)
+- [ Commit Message Format](#commit-message-format)
+- [ Submitting Pull Requests](#submitting-pull-requests)
+- [ Reporting Issues](#reporting-issues)
+- [ Code Style, Docs & Testing](#code-style-docs--testing)
+- [ General Guidelines](#general-guidelines)
+- [ Communication](#communication)
 
 ##  How to Contribute
 
