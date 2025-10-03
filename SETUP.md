@@ -29,10 +29,10 @@ npm install
 
 This project uses environment variables to store sensitive information like API keys and configuration. You will need to create a `.env` file in the root of the project.
 
-**a. Create the `.env` file:**
+**a. Create the `.env` file by copying the example file:**
 
 ```sh
-touch .env
+cp .env.example .env
 ```
 
 **b. Add the following environment variables to the `.env` file:**
@@ -45,12 +45,12 @@ You will need to get these values from your Firebase project settings.
 *   In the **General** tab, under **Your apps**, you will find the Firebase configuration for your web app.
 
 ```
-VITE_API_KEY="your-firebase-api-key"
-VITE_AUTH_DOMAIN="your-firebase-auth-domain"
-VITE_PROJECT_ID="your-firebase-project-id"
-VITE_STORAGE_BUCKET="your-firebase-storage-bucket"
-VITE_MESSAGING_SENDER_ID="your-firebase-messaging-sender-id"
-VITE_APP_ID="your-firebase-app-id"
+VITE_FIREBASE_API_KEY=""
+VITE_FIREBASE_AUTH_DOMAIN=""
+VITE_FIREBASE_PROJECT_ID=""
+VITE_FIREBASE_STORAGE_BUCKET=""
+VITE_FIREBASE_MESSAGING_SENDER_ID=""
+VITE_FIREBASE_APP_ID=""
 ```
 
 **Note:** The `VITE_` prefix is important for Vite projects to expose the environment variables to the client-side code.

@@ -14,19 +14,21 @@ export default function Home() {
   const navigate = useNavigate();
   const { setIsUser, setPlaylist } = useStore();
   useEffect(() => {
+    // Firebase Auth
     const auth = getAuth(app);
-    const pathName = `/search?searchtxt=${
-      localStorage.getItem("search") || "punjabi"
-    }`;
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsUser(true);
-      }
+      if (user) setIsUser(true);
     });
+
+    // Fetch playlists
     fetchFireStore(setPlaylist);
 
-    navigate(pathName);
-  }, []);
+    // Default search
+    const DEFAULT_SEARCH = "top hits";
+    const pathName = `/search?searchtxt=${localStorage.getItem("search") || DEFAULT_SEARCH}`;
+    const currentSearch = new URLSearchParams(window.location.search).get("searchtxt");
+    if (!currentSearch) navigate(pathName);
+}, []);
   return (
     <>
       <div className="flex items-start">

@@ -4,12 +4,14 @@ import Artist from "./components/Artist/artist";
 import SearchComponent from "./components/search/SearchResult";
 import Album from "./components/Album/Album";
 import Plylistinfo from "./components/playlist/Plylistinfo";
+import ErrorPage from "./components/ErrorPage";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Home />,
+      errorElement: <ErrorPage />,
       children: [
         {
           path: "/artist",

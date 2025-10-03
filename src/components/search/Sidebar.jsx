@@ -21,6 +21,7 @@ const Sidebar = () => {
   const sidebarRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [popover, setPopover] = useState(false);
+  
 
   const { isUser, setIsUser, dialogOpen, setDialogOpen } = useStore();
 
@@ -41,12 +42,14 @@ const Sidebar = () => {
       if (
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target) &&
-        !event.target.closest("#sidebar-toggle")
+        !event.target.closest('#sidebar-toggle') &&
+        !event.target.closest('[role="dialog"]')
       ) {
         setIsOpen(false);
         setPopover(false);
       }
     };
+
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);

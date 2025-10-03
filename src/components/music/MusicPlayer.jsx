@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { Play, Pause, SkipBack, SkipForward, Volume1, Volume2, VolumeX, Shuffle } from "lucide-react";
 import ReactPlayer from "react-player";
 import Api from "../../Api";
@@ -9,41 +9,47 @@ import { useStore, useFetch } from "../../zustand/store";
 import useKeyboardShortcuts from "../../lib/useKeyboardShortcuts";
 
 function MusicPlayer() {
-  const [volume, setVolume] = useState(localStorage.getItem("volume") ? parseFloat(localStorage.getItem("volume")) : 0.5);
-  const [muted, setMuted] = useState(false);
-  const [played, setPlayed] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [bgColor, setBgColor] = useState();
-  const [shuffle, setShuffle] = useState(false);
-  const [musicPlayerDrawer, setMusicPlayerDrawer] = useState(false);
   const playerRef = useRef(null);
-  const [song, setSong] = useState();
+  const [bgColor, setBgColor] = React.useState();
+  const [musicPlayerDrawer, setMusicPlayerDrawer] = React.useState(false);
+  const [song, setSong] = React.useState();
+  
+  // Get state from Zustand stores
   const { songs } = useFetch();
-  const { musicId, isPlaying, setIsPlaying, setMusicId, setQueue, queue } = useStore();
+  const {
+    musicId,
+    isPlaying,
+    volume,
+    muted,
+    played,
+    duration,
+    shuffle,
+    setIsPlaying,
+    setQueue,
+    setVolume,
+    setMuted,
+    setPlayed,
+    setDuration,
+    setShuffle,
+    playNext,
+    playPrevious
+  } = useStore();
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
-    togglePlayPause: () => setIsPlaying((prev) => !prev),
-    nextTrack: () => handleNext(),
-    prevTrack: () => handlePrevious(),
+    togglePlayPause: () => setIsPlaying(!isPlaying),
+    nextTrack: () => playNext(),
+    prevTrack: () => playPrevious(),
     increaseVolume: () => {
       setMuted(false);
-      setVolume((v) => {
-        const newVol = Math.min(1, v + 0.1);
-        localStorage.setItem("volume", newVol);
-        return newVol;
-      });
+      setVolume(Math.min(1, volume + 0.1));
     },
     decreaseVolume: () => {
       setMuted(false);
-      setVolume((v) => {
-        const newVol = Math.max(0, v - 0.1);
-        localStorage.setItem("volume", newVol);
-        return newVol;
-      });
+      setVolume(Math.max(0, volume - 0.1));
     },
-    toggleMute: () => setMuted((prev) => !prev),
-    toggleShuffle: () => setShuffle((prev) => !prev),
+    toggleMute: () => setMuted(!muted),
+    toggleShuffle: () => setShuffle(!shuffle),
   });
 
   // Fetch song when musicId changes
@@ -65,36 +71,31 @@ function MusicPlayer() {
       }
     }
     fetchSong();
-  }, [musicId]);
+  }, [musicId, setIsPlaying]);
 
   // Set queue when songs change
-  useEffect(() => setQueue(songs), [songs]);
+  useEffect(() => {
+    if (songs) {
+      setQueue(songs);
+    }
+  }, [songs, setQueue]);
 
   // Handlers
   const handlePlayPause = () => setIsPlaying(!isPlaying);
 
   const handleVolumeChange = (e) => {
     const val = parseFloat(e.target.value);
-    localStorage.setItem("volume", val);
     setVolume(val);
-    setMuted(false);
   };
-
 
   const handleProgress = (state) => {
     setPlayed(state.played);
     if (duration * state.played >= duration) {
-      if (shuffle) {
-        const randomSong = queue[Math.floor(Math.random() * queue.length)];
-        setMusicId(randomSong.id);
-      } else {
-        const currentIndex = queue.findIndex((e) => e.id === musicId);
-        if (currentIndex < queue.length - 1) setMusicId(queue[currentIndex + 1].id);
-      }
+      playNext();
     }
   };
 
-  const handleDuration = (duration) => setDuration(duration);
+  const handleDuration = (newDuration) => setDuration(newDuration);
 
   const handleSeekChange = (e) => setPlayed(parseFloat(e.target.value));
 
@@ -110,26 +111,7 @@ function MusicPlayer() {
     if (seekValue !== undefined) playerRef.current.seekTo(seekValue);
   };
 
-  const handleNext = () => {
-    if (shuffle) {
-      const randomSong = queue[Math.floor(Math.random() * queue.length)];
-      setMusicId(randomSong.id);
-      return;
-    }
-    const currentIndex = queue.findIndex((e) => e.id === musicId);
-    if (currentIndex < queue.length - 1) setMusicId(queue[currentIndex + 1].id);
-  };
   const handleToggleMute = () => setMuted(!muted);
-
-  const handlePrevious = () => {
-    if (shuffle) {
-      const randomSong = queue[Math.floor(Math.random() * queue.length)];
-      setMusicId(randomSong.id);
-      return;
-    }
-    const currentIndex = queue.findIndex((e) => e.id === musicId);
-    if (currentIndex > 0) setMusicId(queue[currentIndex - 1].id);
-  };
 
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
@@ -203,13 +185,13 @@ function MusicPlayer() {
                   <button onClick={() => setShuffle(!shuffle)} className={`${shuffle ? "text-secondary" : "text-white"}`}>
                     <Shuffle className="w-5 h-5" />
                   </button>
-                  <button className="focus:outline-none" onClick={handlePrevious}>
+                  <button className="focus:outline-none" onClick={playPrevious}>
                     <SkipBack className="w-5 h-5" />
                   </button>
                   <button onClick={handlePlayPause} className="focus:outline-none bg-white text-black rounded-full p-2">
                     {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
                   </button>
-                  <button className="focus:outline-none" onClick={handleNext}>
+                  <button className="focus:outline-none" onClick={playNext}>
                     <SkipForward className="w-5 h-5" />
                   </button>
                 </div>
@@ -259,11 +241,15 @@ function MusicPlayer() {
 
       <ReactPlayer
         ref={playerRef}
+        key={musicId} // Force re-render on song change to prevent multiple audio instances
         url={song?.downloadUrl?.[4]?.url || ""}
         playing={isPlaying}
         volume={muted ? 0 : volume}
         onProgress={handleProgress}
         onDuration={handleDuration}
+        onPlay={() => setIsPlaying(true)}  
+        onPause={() => setIsPlaying(false)}
+        onEnded={playNext} // Use centralized next function
         width="0"
         height="0"
       />
