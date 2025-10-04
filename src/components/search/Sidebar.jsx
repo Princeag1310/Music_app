@@ -22,7 +22,7 @@ const Sidebar = () => {
   const [popover, setPopover] = useState(false);
   const [playlistExpanded, setPlaylistExpanded] = useState(false);
 
-  const { isUser, setIsUser, dialogOpen, setDialogOpen, playlist } = useStore();
+  const { isUser, setIsUser, dialogOpen, setDialogOpen, playlist, likedSongs } = useStore();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -86,7 +86,7 @@ const Sidebar = () => {
       label: "Liked Songs",
       icon: Heart,
       path: "/liked",
-      badge: isUser ? playlist.length : null
+      badge: isUser && likedSongs.length > 0 ? likedSongs.length : null
     },
     {
       id: "playlist",
