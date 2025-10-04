@@ -87,10 +87,25 @@ export const presetThemes = {
   },
 };
 
+
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("theme") || "default";
   });
+
+  // Helper to apply custom color overrides
+  const applyCustomColors = (root) => {
+    try {
+      const customColors = JSON.parse(
+        localStorage.getItem("customColors") || "{}"
+      );
+      Object.entries(customColors).forEach(([key, value]) =>
+        root.style.setProperty(`--${key}`, value)
+      );
+    } catch (e) {
+      console.warn("Failed to apply custom colors:", e);
+    }
+  };
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -121,17 +136,8 @@ export const ThemeProvider = ({ children }) => {
           root.style.setProperty(key, value)
         );
 
-         try {
-            const customColors = JSON.parse(localStorage.getItem("customColors") || "{}");
-           Object.entries(customColors).forEach(([key, value]) =>
-             root.style.setProperty(`--${key}`, value)
-            );
-          } catch (e) {
-            console.warn("Failed to apply custom colors:", e);
-          }
+        applyCustomColors(root);
       };
-
-    
 
       mediaQuery.addEventListener("change", listener);
       return () => mediaQuery.removeEventListener("change", listener);
@@ -144,13 +150,9 @@ export const ThemeProvider = ({ children }) => {
     );
 
     // Apply custom color overrides if present
-    const customColors = JSON.parse(localStorage.getItem("customColors") || "{}");
-    Object.entries(customColors).forEach(([key, value]) =>
-      root.style.setProperty(`--${key}`, value)
-    );
+    applyCustomColors(root);
   }, [theme]);
 
-  // Persist theme selection only when it changes
   useEffect(() => {
     localStorage.setItem("theme", theme);
   }, [theme]);
@@ -169,4 +171,3 @@ export const useTheme = () => {
   }
   return context;
 };
-
