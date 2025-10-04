@@ -70,14 +70,18 @@ const Sidebar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Build home search path with proper URL encoding
+  const storedSearch = localStorage.getItem("search") || "top hits";
+  const homeSearchPath = `/search?searchTxt=${encodeURIComponent(storedSearch)}`;
+
   const menuItems = [
     {
       id: "home",
       label: "Home",
       icon: Home,
-      path: `/search?searchTxt=${localStorage.getItem("search") || "top hits"}`,
+      path: homeSearchPath,
       onClick: () => {
-        navigate(`/search?searchTxt=${localStorage.getItem("search") || "top hits"}`);
+        navigate(homeSearchPath);
         setIsOpen(false);
       }
     },
