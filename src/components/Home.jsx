@@ -23,9 +23,15 @@ export default function Home() {
 
     // Default search
     const DEFAULT_SEARCH = "top hits";
-    const pathName = `/search?searchtxt=${localStorage.getItem("search") || DEFAULT_SEARCH}`;
-    const currentSearch = new URLSearchParams(window.location.search).get("searchtxt");
-    if (!currentSearch) navigate(pathName);
+    const searchText = localStorage.getItem("search")
+    if(!searchText) {
+      localStorage.setItem("search", DEFAULT_SEARCH)
+    }
+    const pathName = `/search?searchTxt=${localStorage.getItem("search")}`;
+    const currentSearch = new URLSearchParams(window.location.search).get("searchTxt");
+    if (!currentSearch) {
+      navigate(pathName);
+    }
 }, []);
   return (
     <>

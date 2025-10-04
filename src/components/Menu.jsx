@@ -9,9 +9,9 @@ import {
   MenubarSub,
   MenubarSubTrigger,
   MenubarSubContent,
+  MenubarItem,
 } from "../components/ui/menubar";
 import { Toaster } from "../components/ui/sonner";
-import { toast } from "sonner";
 
 export default function Menu({ song }) {
   const { playlist } = useStore();
@@ -30,16 +30,13 @@ export default function Menu({ song }) {
               <MenubarSubTrigger>Add to Playlist</MenubarSubTrigger>
               <MenubarSubContent className="w-52 mr-2 ">
                 {playlist.map((list) => (
-                  <div
+                  <MenubarItem
                     key={list.id}
                     className="p-2 rounded-lg  w-full hover:bg-secondary"
-                    onClick={() => (
-                      pushInDb(list.id, song.id),
-                      toast("song added in playlist")
-                    )}
+                    onClick={() => pushInDb(list.id, song.id)}
                   >
                     {list.data.name}
-                  </div>
+                  </MenubarItem>
                 ))}
               </MenubarSubContent>
             </MenubarSub>

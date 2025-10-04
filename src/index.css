@@ -61,30 +61,31 @@
     scrollbar-color: #888 #1e1e1e;
     scroll-behavior: smooth;
   }
+
+  /* Global Styles */
   body {
     @apply bg-background text-foreground;
-    scrollbar-face-color: #888;
-    scrollbar-track-color: #1e1e1e;
-    scrollbar-arrow-color: #888;
-    scrollbar-shadow-color: #1e1e1e;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
     max-height: 100dvh;
     overflow: hidden;
+  }
+
+  * {
+    @apply border-border;
   }
 }
 
 ::-webkit-scrollbar {
   width: 12px;
 }
-
 ::-webkit-scrollbar-track {
   background: #1e1e1e;
 }
-
 ::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 6px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }

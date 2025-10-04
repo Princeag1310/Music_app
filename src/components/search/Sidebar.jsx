@@ -3,6 +3,8 @@ import { Button } from "../ui/button";
 import { Home, Menu, X, List, User, Baby, Heart, ChevronDown, ChevronRight, LogOut } from "lucide-react";
 import { useStore } from "../../zustand/store";
 import { Dialog, DialogContent } from "../ui/dialog";
+import { ThemeToggle } from "../ThemeToggle.jsx";
+
 import AuthTab from "../../Auth/AuthTab";
 import { signOut, getAuth } from "firebase/auth";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -17,7 +19,6 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const sidebarRef = useRef(null);
-  const auth = getAuth(app);
   const [isOpen, setIsOpen] = useState(false);
   const [popover, setPopover] = useState(false);
   const [playlistExpanded, setPlaylistExpanded] = useState(false);
