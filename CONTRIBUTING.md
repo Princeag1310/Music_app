@@ -15,28 +15,31 @@ Thank you for your interest in contributing to **Music App**! This guide will he
 
 ##  How to Contribute
 
-1. **Fork the repository**  
+1. **Follow the setup guide**  
+   Before you start, please follow the [Project Setup Guide](SETUP.md) for detailed instructions on getting your local environment ready.
+
+2. **Fork the repository**  
    Click the **Fork** button at the top of this repository.
 
-2. **Clone your fork**
+3. **Clone your fork**
    ```bash
    git clone https://github.com/YOUR_USERNAME/Music_app.git
    cd Music_app
    ```
 
-3. **Install dependencies**
+4. **Install dependencies**
    ```bash
    npm install
    ```
 
-4. **Configure environment variables**
+5. **Configure environment variables**
    - Copy the example file:
      ```bash
      cp .env.example .env
      ```
    - Update `.env` with your **Firebase project credentials**.
 
-5. **Run the development server**
+6. **Run the development server**
    ```bash
    npm run dev
    ```
