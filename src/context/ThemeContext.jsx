@@ -123,6 +123,7 @@ export const ThemeProvider = ({ children }) => {
     allVars.forEach((v) => root.style.removeProperty(v));
 
     let themeToApply = theme;
+    let cleanup;
 
     // Handle system theme
     if (theme === "system") {
@@ -132,6 +133,7 @@ export const ThemeProvider = ({ children }) => {
       const listener = (e) => {
         const newTheme = e.matches ? "dark" : "light";
         const selected = presetThemes[newTheme] || presetThemes.light;
+
         Object.entries(selected).forEach(([key, value]) =>
           root.style.setProperty(key, value)
         );
@@ -140,7 +142,7 @@ export const ThemeProvider = ({ children }) => {
       };
 
       mediaQuery.addEventListener("change", listener);
-      return () => mediaQuery.removeEventListener("change", listener);
+      cleanup = () => mediaQuery.removeEventListener("change", listener);
     }
 
     // Apply preset theme first
@@ -151,6 +153,8 @@ export const ThemeProvider = ({ children }) => {
 
     // Apply custom color overrides if present
     applyCustomColors(root);
+
+    return cleanup;
   }, [theme]);
 
   useEffect(() => {
