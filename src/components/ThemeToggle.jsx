@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/context/ThemeContext";
 
 const allThemes = [
+  "default",
   "light",
   "dark",
   "system",
@@ -40,6 +41,7 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   const renderIcon = (t) => {
+    if (t === "default") return <Monitor className="h-4 w-4" />;
     if (t === "light") return <Sun className="h-4 w-4" />;
     if (t === "dark") return <Moon className="h-4 w-4" />;
     if (t === "system") return <Monitor className="h-4 w-4" />;

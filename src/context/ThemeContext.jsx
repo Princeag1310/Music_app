@@ -22,6 +22,15 @@ const ThemeContext = createContext();
 
 // Full theme definitions
 export const presetThemes = {
+  default: {
+    "--background": "204 50% 8%",
+    "--foreground": "204 5% 90%",
+    "--card": "204 50% 8%",
+    "--card-foreground": "204 5% 90%",
+    "--primary": "204 100% 31%",
+    "--secondary": "204 30% 10%",
+    "--accent": "166 30% 15%",
+  },
   light: {
     "--background": "0 0% 100%",
     "--foreground": "0 0% 3.9%",
@@ -80,7 +89,7 @@ export const presetThemes = {
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem("theme") || "system";
+    return localStorage.getItem("theme") || "default";
   });
 
   useEffect(() => {
