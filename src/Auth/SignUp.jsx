@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
-  getAuth, 
   createUserWithEmailAndPassword, 
   signInWithPopup, 
   signInWithRedirect,
@@ -9,7 +8,7 @@ import {
   GoogleAuthProvider, 
   GithubAuthProvider 
 } from "firebase/auth";
-import { app } from "./firebase";
+import { auth } from "./firebase";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { Label } from "../components/ui/label";
@@ -29,7 +28,6 @@ const validatePassword = (password) => {
 };
 
 function SignUp() {
-  const auth = getAuth(app);
   const email = useRef();
   const password = useRef();
   const confPassword = useRef();
@@ -54,7 +52,7 @@ function SignUp() {
       .catch((error) => {
         console.log(error.message);
       });
-  }, [auth, navigate, setDialogOpen, setIsUser]);
+  }, [navigate, setDialogOpen, setIsUser]);
 
   useEffect(() => {
     if (passwordValue) setPasswordValidation(validatePassword(passwordValue));
@@ -78,8 +76,8 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const newErrors = {};
 
+    const newErrors = {};
     if (!email.current.value.trim()) newErrors.email = "Email is required";
     const validation = validatePassword(passwordValue);
     if (!validation.isValid) newErrors.password = "Password does not meet all requirements";
@@ -191,13 +189,15 @@ function SignUp() {
             className={errors.confirmPassword ? "border-red-500" : ""}
             placeholder="Confirm your password"
           />
-          {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.confirmPassword}
+            </p>
+          )}
         </div>
 
         {errors.submit && (
-          <div className="w-full">
-            <p className="text-red-500 text-sm text-center">{errors.submit}</p>
-          </div>
+          <p className="text-red-500 text-sm text-center">{errors.submit}</p>
         )}
 
         <Button

@@ -1,6 +1,5 @@
 import { useRef, useState, useEffect } from "react";
 import { 
-  getAuth, 
   signInWithEmailAndPassword, 
   signInWithPopup, 
   signInWithRedirect,
@@ -8,7 +7,7 @@ import {
   GoogleAuthProvider, 
   GithubAuthProvider 
 } from "firebase/auth";
-import { app } from "./firebase";
+import { auth } from "./firebase";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { Label } from "../components/ui/label";
@@ -17,7 +16,6 @@ import { useNavigate } from "react-router-dom";
 import { AiFillGoogleCircle, AiFillGithub } from "react-icons/ai";
 
 function Login() {
-  const auth = getAuth(app);
   const email = useRef();
   const password = useRef();
   const { setIsUser, setDialogOpen } = useStore();
@@ -37,7 +35,7 @@ function Login() {
       .catch((error) => {
         console.log(error.message);
       });
-  }, [auth, navigate, setDialogOpen, setIsUser]);
+  }, [navigate, setDialogOpen, setIsUser]);
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
@@ -103,7 +101,6 @@ function Login() {
   return (
     <div className="flex flex-col gap-2 items-center">
       <h1 className="font-semibold text-xl mt-3">Login to Continue</h1>
-
       <form onSubmit={handleEmailLogin} className="flex flex-col items-center gap-4 w-full">
         <div className="w-full">
           <Label>Email</Label>
@@ -117,7 +114,6 @@ function Login() {
           {loading ? "Logging in..." : "Login"}
         </Button>
       </form>
-
       <div className="flex gap-4 mt-4">
         <button onClick={handleGoogleLogin} title="Login with Google" disabled={loading}>
           <AiFillGoogleCircle size={36} />
