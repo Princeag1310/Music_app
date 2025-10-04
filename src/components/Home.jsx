@@ -12,16 +12,14 @@ import { fetchFireStore } from "../Api";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { setIsUser, setPlaylist } = useStore();
+  const { setIsUser, setPlaylist, setLikedSongs } = useStore();
   useEffect(() => {
     // Firebase Auth
     const auth = getAuth(app);
     onAuthStateChanged(auth, (user) => {
       if (user) setIsUser(true);
     });
-
-    // Fetch playlists
-    fetchFireStore(setPlaylist);
+    fetchFireStore(setPlaylist, setLikedSongs);
 
     // Default search
     const DEFAULT_SEARCH = "top hits";

@@ -69,6 +69,7 @@ export const useStore = create((set, get) => ({
   currentSong: null,
   isPlaying: false,
   queue: [],
+  likedSongs: [],
   currentIndex: 0,
   
   // Audio controls
@@ -95,9 +96,11 @@ export const useStore = create((set, get) => ({
   setMusicId: (id) => {
     const { queue } = get();
     const newIndex = queue.findIndex(song => song.id === id);
+    const currentSong = queue.find(song => song.id === id);
     
     set({ 
       musicId: id, 
+      currentSong: currentSong || null, // Set current song object from queue
       currentIndex: newIndex >= 0 ? newIndex : 0, // Update index if song found in queue
       played: 0, // Reset progress when switching songs
       isPlaying: false // Stop current song when switching
@@ -106,6 +109,19 @@ export const useStore = create((set, get) => ({
   setCurrentSong: (song) => set({ currentSong: song }),
   setIsPlaying: (prop) => set({ isPlaying: prop }),
   setQueue: (prop) => set({ queue: prop, currentIndex: 0 }),
+  setLikedSongs: (songs) => set({ likedSongs: songs }),
+  addLikedSong: (songId) => 
+    set((state) => ({
+      likedSongs: [...state.likedSongs, songId]
+    })),
+  removeLikedSong: (songId) =>
+    set((state) => ({
+      likedSongs: state.likedSongs.filter(id => id !== songId)
+    })),
+  isLiked: (songId) => {
+    const state = get();
+    return state.likedSongs.includes(songId);
+  },
   
   // Audio control setters with persistence
   setVolume: (volume) => {
