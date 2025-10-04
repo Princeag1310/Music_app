@@ -20,7 +20,6 @@ const Sidebar = () => {
   const auth = getAuth(app);
   const [isOpen, setIsOpen] = useState(false);
   const [popover, setPopover] = useState(false);
-  
 
   const { isUser, setIsUser, dialogOpen, setDialogOpen } = useStore();
 
@@ -41,14 +40,13 @@ const Sidebar = () => {
       if (
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target) &&
-        !event.target.closest('#sidebar-toggle') &&
+        !event.target.closest("#sidebar-toggle") &&
         !event.target.closest('[role="dialog"]')
       ) {
         setIsOpen(false);
         setPopover(false);
       }
     };
-
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -80,34 +78,32 @@ const Sidebar = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <nav className="flex flex-col h-full pt-20">
-          <ul className="flex-grow space-y-2 p-4">
+        <nav className="flex flex-col h-full  pt-20">
+          <ul className="flex-grow flex flex-col gap-2  space-y-2  p-4">
             <li>
               <Button
                 onClick={() => {
-                  navigate(`/search?searchTxt=${localStorage.getItem("search")}`);
+                  navigate(
+                    `/search?searchTxt=${localStorage.getItem("search")}`
+                  );
                   setIsOpen(false);
                 }}
                 variant="ghost"
-                className="w-full justify-start text-lg py-4 hover:bg-accent"
+                className="w-full justify-start text-lg py-4  hover:bg-accent"
               >
                 <Home size={28} className="mr-4" /> Home
               </Button>
             </li>
 
-            <Link 
-              to={`/liked`}
-              onClick={() => setIsOpen(false)}
-            >
+            <Link to={`/liked`} onClick={() => setIsOpen(false)}>
               <li>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start text-lg py-4 hover:bg-accent"
+                  className="w-full justify-start text-lg py-4  hover:bg-accent"
                 >
                   <Heart size={28} className="mr-4" /> Liked Songs
                 </Button>
               </li>
-
             </Link>
             <li>
               <Popover open={popover} onOpenChange={setPopover}>
@@ -131,7 +127,10 @@ const Sidebar = () => {
             </li>
 
             <li>
-              <Button variant="ghost" className="w-full justify-start text-lg py-4 hover:bg-accent">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-lg py-4 hover:bg-accent"
+              >
                 <a
                   href="https://anmol.pro/"
                   target="_blank"
@@ -165,7 +164,7 @@ const Sidebar = () => {
                     setPopover(false);
                     setIsOpen(false);
                   }}
-                  className="w-full justify-start text-lg py-4 bg-destructive text-white hover:bg-destructive/80"
+                  className="w-full justify-start  text-lg py-4 bg-destructive text-white hover:bg-destructive/80"
                 >
                   <User size={28} className="mr-4" /> Log Out
                 </Button>
