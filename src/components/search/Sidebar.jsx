@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "../ui/button";
-import { Home, Menu, X, List, User, Baby } from "lucide-react";
+import { Home, Menu, X, List, User, Baby, Heart } from "lucide-react";
 import { useStore } from "../../zustand/store";
 import { Dialog, DialogContent } from "../ui/dialog";
 import AuthTab from "../../Auth/AuthTab";
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/popover";
 import Playlist from "../playlist/Playlists";
 import { app } from "../../Auth/firebase";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -95,6 +95,20 @@ const Sidebar = () => {
               </Button>
             </li>
 
+            <Link 
+              to={`/liked`}
+              onClick={() => setIsOpen(false)}
+            >
+              <li>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-lg py-4 hover:bg-accent"
+                >
+                  <Heart size={28} className="mr-4" /> Liked Songs
+                </Button>
+              </li>
+
+            </Link>
             <li>
               <Popover open={popover} onOpenChange={setPopover}>
                 <PopoverTrigger className="w-full">
