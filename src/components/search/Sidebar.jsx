@@ -1,27 +1,26 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "../ui/button";
-import { Home, Menu, X, List, User, Baby } from "lucide-react";
+import { Home, Menu, X, List, User, Baby, Heart } from "lucide-react";
 import { useStore } from "../../zustand/store";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { ThemeToggle } from "../ThemeToggle.jsx";
 
 import AuthTab from "../../Auth/AuthTab";
 import { signOut } from "firebase/auth";
-import { auth } from "../../Auth/firebase"; 
+import { auth } from "../../Auth/firebase";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Playlist from "../playlist/Playlists";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const sidebarRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [popover, setPopover] = useState(false);
-  
 
   const { isUser, setIsUser, dialogOpen, setDialogOpen } = useStore();
 
@@ -42,14 +41,13 @@ const Sidebar = () => {
       if (
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target) &&
-        !event.target.closest('#sidebar-toggle') &&
+        !event.target.closest("#sidebar-toggle") &&
         !event.target.closest('[role="dialog"]')
       ) {
         setIsOpen(false);
         setPopover(false);
       }
     };
-
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -82,7 +80,12 @@ const Sidebar = () => {
         }`}
       >
         <nav className="flex flex-col h-full pt-20">
-          <ul className="flex-grow space-y-2 p-4">
+          {/* Theme Toggle at the top - More visible! */}
+          <div className="px-4 pb-2 flex justify-end">
+            <ThemeToggle />
+          </div>
+
+          <ul className="flex-grow flex flex-col gap-2 space-y-2 p-4">
             <li>
               <Button
                 onClick={() => {
@@ -97,6 +100,17 @@ const Sidebar = () => {
                 <Home size={28} className="mr-4" /> Home
               </Button>
             </li>
+
+            <Link to={`/liked`} onClick={() => setIsOpen(false)}>
+              <li>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-lg py-4 hover:bg-accent"
+                >
+                  <Heart size={28} className="mr-4" /> Liked Songs
+                </Button>
+              </li>
+            </Link>
 
             <li>
               <Popover open={popover} onOpenChange={setPopover}>
@@ -120,7 +134,10 @@ const Sidebar = () => {
             </li>
 
             <li>
-              <Button asChild variant="ghost" className="w-full justify-start text-lg py-4 hover:bg-accent"
+              <Button
+                asChild
+                variant="ghost"
+                className="w-full justify-start text-lg py-4 hover:bg-accent"
               >
                 <a
                   href="https://anmol.pro/"
@@ -163,8 +180,7 @@ const Sidebar = () => {
             )}
           </ul>
 
-          <div className="p-4 border-t flex items-center justify-between">
-            <ThemeToggle /> {/* Theme button */}
+          <div className="p-4 border-t">
             <span className="text-sm text-muted-foreground">
               © 2024 Anmol Singh
             </span>
