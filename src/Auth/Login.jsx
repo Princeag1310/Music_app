@@ -1,6 +1,5 @@
 import { useRef, useState, useEffect } from "react";
 import { 
-  getAuth, 
   signInWithEmailAndPassword, 
   signInWithPopup, 
   signInWithRedirect,
@@ -8,7 +7,7 @@ import {
   GoogleAuthProvider, 
   GithubAuthProvider 
 } from "firebase/auth";
-import { app } from "./firebase";
+import { auth } from "./firebase";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { Label } from "../components/ui/label";
@@ -20,7 +19,6 @@ import { AlertCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 function Login() {
-  const auth = getAuth(app);
   const email = useRef();
   const password = useRef();
   const { setIsUser, setDialogOpen } = useStore();
@@ -52,7 +50,7 @@ function Login() {
           toast.error(errorMsg);
         }
       });
-  }, [auth, navigate, setDialogOpen, setIsUser]);
+  }, [navigate, setDialogOpen, setIsUser]);
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
