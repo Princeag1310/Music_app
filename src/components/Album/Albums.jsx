@@ -25,7 +25,6 @@ function Albums({ search }) {
       {albums && (
         <div className="mt-6 w-[95vw] sm:w-full sm:mt-8 border p-4 rounded-xl shadow-lg">
           <h2 className="text-xl sm:text-2xl font-bold mb-4">Albums</h2>
-          <ScrollArea className="w-full">
             <div className="flex gap-4 pb-4 overflow-x-auto">
               {albums.map((album, index) => (
                 <div
@@ -45,7 +44,6 @@ function Albums({ search }) {
                 </div>
               ))}
             </div>
-          </ScrollArea>
         </div>
       )}
     </>
