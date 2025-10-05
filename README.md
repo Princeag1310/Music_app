@@ -22,7 +22,7 @@ To get a local copy up and running, follow these simple steps.
 ### Prerequisites
 
 * Node.js (v14 or later)
-* npm
+* pnpm
 
 ### Installation
 
@@ -32,7 +32,7 @@ To get a local copy up and running, follow these simple steps.
    ```
 2. Install NPM packages
    ```sh
-   npm install
+   pnpm install
    ```
 
 ### Configuration
@@ -46,7 +46,7 @@ To get a local copy up and running, follow these simple steps.
 
 4. Start the development server
    ```sh
-   npm run dev
+   pnpm run dev
    ```
 
 ## Contributing

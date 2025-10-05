@@ -5,7 +5,7 @@ This guide will walk you through the process of setting up the project for local
 ### Prerequisites
 
 *   Node.js (v14 or later)
-*   npm
+*   pnpm
 *   A Firebase project
 
 ### 1. Clone the Repository
@@ -22,7 +22,7 @@ cd Music_app
 Install the project dependencies using npm:
 
 ```sh
-npm install
+pnpm install
 ```
 
 ### 3. Set Up Environment Variables
@@ -68,7 +68,7 @@ The base URL for the API is `https://saavn.dev`.
 Once you have set up the environment variables, you can start the development server:
 
 ```sh
-npm run dev
+pnpm run dev
 ```
 
 The application will be available at `http://localhost:5173` (or another port if 5173 is in use).

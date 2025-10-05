@@ -29,7 +29,7 @@ Thank you for your interest in contributing to **Music App**! This guide will he
 
 4. **Install dependencies**
    ```bash
-   npm install
+   pnpm install
    ```
 
 5. **Configure environment variables**
@@ -41,7 +41,7 @@ Thank you for your interest in contributing to **Music App**! This guide will he
 
 6. **Run the development server**
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 ##  Branch Naming Conventions
@@ -121,8 +121,8 @@ When opening an issue, please:
 
 **Before committing:**
 ```bash
-npm run lint
-npm run format
+pnpm run lint
+pnpm run format
 ```
 
 ##  General Guidelines
