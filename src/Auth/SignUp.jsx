@@ -46,7 +46,6 @@ function SignUp() {
         if (result) {
           setDialogOpen(false);
           setIsUser(true);
-          navigate("/");
         }
       })
       .catch((error) => {
@@ -92,8 +91,7 @@ function SignUp() {
     try {
       await createUserWithEmailAndPassword(auth, email.current.value.trim(), passwordValue);
       setDialogOpen(false);
-      setIsUser(true);
-      navigate("/");
+      setIsUser(true);      
     } catch (error) {
       setErrors({ submit: error.message || "Failed to create account" });
     }
@@ -108,7 +106,6 @@ function SignUp() {
       await signInWithPopup(auth, provider);
       setDialogOpen(false);
       setIsUser(true);
-      navigate("/");
     } catch (error) {
       if (error.code === "auth/popup-blocked") {
         alert("Popup blocked! Redirecting instead...");
@@ -128,7 +125,6 @@ function SignUp() {
       await signInWithPopup(auth, provider);
       setDialogOpen(false);
       setIsUser(true);
-      navigate("/");
     } catch (error) {
       if (error.code === "auth/popup-blocked") {
         alert("Popup blocked! Redirecting instead...");

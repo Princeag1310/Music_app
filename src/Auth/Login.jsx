@@ -29,7 +29,6 @@ function Login() {
         if (result) {
           setDialogOpen(false);
           setIsUser(true);
-          navigate("/");
         }
       })
       .catch((error) => {
@@ -48,7 +47,6 @@ function Login() {
       );
       setDialogOpen(false);
       setIsUser(true);
-      navigate("/");
     } catch (error) {
       alert(error.message);
     } finally {
@@ -63,7 +61,6 @@ function Login() {
       await signInWithPopup(auth, provider);
       setDialogOpen(false);
       setIsUser(true);
-      navigate("/");
     } catch (error) {
       console.log(error.message);
       if (error.code === "auth/popup-blocked") {
@@ -84,7 +81,6 @@ function Login() {
       await signInWithPopup(auth, provider);
       setDialogOpen(false);
       setIsUser(true);
-      navigate("/");
     } catch (error) {
       console.log(error.message);
       if (error.code === "auth/popup-blocked") {
