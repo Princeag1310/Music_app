@@ -11,7 +11,6 @@ import {
   MenubarSubContent,
   MenubarItem,
 } from "../components/ui/menubar";
-import { Toaster } from "../components/ui/sonner";
 
 export default function Menu({ song }) {
   const { playlist } = useStore();
@@ -43,7 +42,6 @@ export default function Menu({ song }) {
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
-      <Toaster />
     </>
   );
 }

@@ -8,6 +8,7 @@ createRoot(document.getElementById("root")).render(
   <ThemeProvider defaultTheme="dark" storageKey="music-app-theme">
     <App />
     <Toaster
+      position="top-right"
       richColors
       toastOptions={{
         classNames: {
