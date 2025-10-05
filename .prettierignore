@@ -1,0 +1,13 @@
+.prettierrc
+package.json
+pnpm-lock.yaml
+
+/.vscode
+/node_modules
+./dist
+
+*.yml
+*.yaml
+*.env
+.env
+.env.*
