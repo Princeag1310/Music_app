@@ -7,6 +7,13 @@ import { ThemeProvider } from "./components/ThemeProvider.jsx";
 createRoot(document.getElementById("root")).render(
   <ThemeProvider defaultTheme="dark" storageKey="music-app-theme">
     <App />
-    <Toaster />
+    <Toaster
+      richColors
+      toastOptions={{
+        classNames: {
+          success: "group-[.toaster]:text-white",
+        },
+      }}
+    />
   </ThemeProvider>
 );
