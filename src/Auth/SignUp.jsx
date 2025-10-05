@@ -54,7 +54,6 @@ function SignUp() {
         if (result) {
           setDialogOpen(false);
           setIsUser(true);
-          navigate("/");
         }
       })
       .catch((error) => {
@@ -102,8 +101,7 @@ function SignUp() {
       await createUserWithEmailAndPassword(auth, email.current.value.trim(), passwordValue);
       toast.success("Account created successfully! Welcome!");
       setDialogOpen(false);
-      setIsUser(true);
-      navigate("/");
+      setIsUser(true);      
     } catch (error) {
       console.error('Sign up error:', error);
       let errorMessage = "Failed to create account";
@@ -153,7 +151,6 @@ function SignUp() {
       toast.success("Successfully signed in with Google!");
       setDialogOpen(false);
       setIsUser(true);
-      navigate("/");
     } catch (error) {
       console.error('Google login error:', error);
       if (error.code === "auth/popup-blocked") {
@@ -190,7 +187,6 @@ function SignUp() {
       toast.success("Successfully signed in with GitHub!");
       setDialogOpen(false);
       setIsUser(true);
-      navigate("/");
     } catch (error) {
       console.error('GitHub login error:', error);
       if (error.code === "auth/popup-blocked") {

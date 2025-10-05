@@ -39,7 +39,6 @@ function Login() {
           toast.success("Successfully logged in!");
           setDialogOpen(false);
           setIsUser(true);
-          navigate("/");
         }
       })
       .catch((error) => {
@@ -67,7 +66,6 @@ function Login() {
       toast.success("Successfully logged in!");
       setDialogOpen(false);
       setIsUser(true);
-      navigate("/");
     } catch (error) {
       console.error('Login error:', error);
       let errorMessage = "Unable to log in. Please try again.";
@@ -152,7 +150,6 @@ function Login() {
       toast.success("Successfully logged in with Google!");
       setDialogOpen(false);
       setIsUser(true);
-      navigate("/");
     } catch (error) {
       console.error('Google login error:', error);
       let errorMessage = "Unable to sign in with Google. Please try again.";
@@ -219,7 +216,6 @@ function Login() {
       toast.success("Successfully logged in with GitHub!");
       setDialogOpen(false);
       setIsUser(true);
-      navigate("/");
     } catch (error) {
       console.error('GitHub login error:', error);
       let errorMessage = "Unable to sign in with GitHub. Please try again.";

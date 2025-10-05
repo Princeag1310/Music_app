@@ -50,13 +50,12 @@ export const fetchFireStore = (setPlaylist, setLikedSongs) => {
   let auth = getAuth(app);
   onAuthStateChanged(auth, async (user) => {
     if (user?.uid) {
+      try {
       const docRef = collection(db, "users", user?.uid, "playlists");
       const docSnap = await getDocs(docRef);
       docSnap.forEach((e) => {
         setPlaylist({ id: e.id, data: e.data() });
       });
-
-      try {
         const userDocRef = doc(db, "users", user?.uid);
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
