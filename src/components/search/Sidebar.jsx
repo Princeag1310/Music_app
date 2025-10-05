@@ -133,26 +133,54 @@ const Sidebar = () => {
               if (item.external) {
                 return (
                   <li key={item.id}>
-                    <a href={item.external} target="_blank" rel="noopener noreferrer">
-                      <Button variant="ghost" className={cn("w-full justify-start gap-3 px-3 py-5 text-base font-medium", "hover:bg-accent hover:text-accent-foreground transition-all duration-200")}>
+                    <Button
+                      asChild
+                      variant="ghost"
+                      className={cn(
+                        "w-full justify-start gap-3 px-3 py-5 text-base font-medium",
+                        "hover:bg-accent hover:text-accent-foreground transition-all duration-200"
+                      )}
+                    >
+                      <a href={item.external} target="_blank" rel="noopener noreferrer">
                         <item.icon size={20} className="flex-shrink-0" />
                         <span>{item.label}</span>
-                      </Button>
-                    </a>
+                      </a>
+                    </Button>
                   </li>
                 );
               }
 
               return (
                 <li key={item.id}>
-                  <Link to={item.path} onClick={() => { item.onClick?.(); setIsOpen(false); }}>
-                    <Button variant="ghost" className={cn("w-full justify-start gap-3 px-3 py-5 text-base font-medium", "hover:bg-accent hover:text-accent-foreground transition-all duration-200", "relative overflow-hidden", isActive(item.id) && "bg-accent text-accent-foreground font-semibold")}>
-                      {isActive(item.id) && <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-full" />}
+                  <Button
+                    asChild
+                    variant="ghost"
+                    className={cn(
+                      "w-full justify-start gap-3 px-3 py-5 text-base font-medium",
+                      "hover:bg-accent hover:text-accent-foreground transition-all duration-200",
+                      "relative overflow-hidden",
+                      isActive(item.id) && "bg-accent text-accent-foreground font-semibold"
+                    )}
+                  >
+                    <Link
+                      to={item.path}
+                      onClick={() => {
+                        item.onClick?.();
+                        setIsOpen(false);
+                      }}
+                    >
+                      {isActive(item.id) && (
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-full" />
+                      )}
                       <item.icon size={20} className="flex-shrink-0" />
                       <span className="flex-1 text-left">{item.label}</span>
-                      {item.badge && <span className="px-2 py-0.5 text-xs bg-primary/20 text-primary rounded-full">{item.badge}</span>}
-                    </Button>
-                  </Link>
+                      {item.badge && (
+                        <span className="px-2 py-0.5 text-xs bg-primary/20 text-primary rounded-full">
+                          {item.badge}
+                        </span>
+                      )}
+                    </Link>
+                  </Button>
                 </li>
               );
             })}

@@ -1,9 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-const ThemeProviderContext = createContext({
-  theme: "dark",
-  setTheme: () => null,
-});
+const ThemeProviderContext = createContext(undefined);
 
 export function ThemeProvider({
   children,
