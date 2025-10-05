@@ -7,32 +7,45 @@ export const useFetch = create((set) => ({
   Topresult: null,
   setTopresult: (props) => set({ Topresult: props }),
   fetchSongs: async (search) => {
-    try {
-      const res = await Api(`/api/search/songs?query=${search}`);
+  try {
+    const res = await Api(`/api/search/songs?query=${search}`);
 
-      if (res.data.data.results[0]) {
-        const topResult = res.data.data.results[0];
+    if (res.data.data.results[0]) {
+      const topResult = res.data.data.results[0];
+      const initialSongs = res.data.data.results.slice(0, 5);
+
+      // Fetch suggestions for this song
+      const suggestionsRes = await fetch(
+        `https://jiosaavan-api-2-harsh-patel.vercel.app/api/songs/${topResult.id}/suggestions?limit=30`
+      );
+      const suggestionsData = await suggestionsRes.json();
+
+      // Combine and deduplicate songs based on 'id'
+      const allSongs = [...initialSongs, ...suggestionsData.data];
+      const uniqueSongsMap = new Map();
+
+      allSongs.forEach((song) => {
+        if (!uniqueSongsMap.has(song.id)) {
+          uniqueSongsMap.set(song.id, song);
+        }
+      });
+
+      const uniqueSongs = Array.from(uniqueSongsMap.values());
+
         set({
           Topresult: topResult,
-          songs: res.data.data.results.slice(0, 5),
+          songs: uniqueSongs,
         });
-
-        // Fetch suggestions for this song
-        const suggestionsRes = await fetch(
-          `https://jiosaavan-api-2-harsh-patel.vercel.app/api/songs/${topResult.id}/suggestions?limit=30`
-        );
-        const suggestionsData = await suggestionsRes.json();
-
-        set((state) => ({
-          songs: [...state.songs, ...suggestionsData.data],
-        }));
       } else {
-        set({ songs: false });
+        set({
+          songs: false
+        });
       }
     } catch (error) {
       console.error(error);
     }
   },
+
 
   fetchAlbums: async (search) => {
     try {
