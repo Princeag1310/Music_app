@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { Label } from "../ui/label";
 import { Card, CardContent } from "../ui/card";
 import { PlayCircle, Play, Eye, Pause } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
-import { useNavigate, createSearchParams, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import RandomArtists from "../Artist/artists";
 import { useFetch, useStore } from "../../zustand/store";
 import Menu from "../Menu";
 import Like from "../ui/Like";
+import Albums from "../Album/Albums";
 
 export default function SearchComponent() {
   const { fetchSongs, songs, fetchAlbums, albums, Topresult, setTopresult } =
@@ -15,7 +15,6 @@ export default function SearchComponent() {
   const { setMusicId, musicId, isPlaying, setIsPlaying, currentSong } = useStore();
   const url = useLocation();
   const search = url.search.split("=")[1];
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAlbums(search);
@@ -28,14 +27,6 @@ export default function SearchComponent() {
     } else {
       setIsPlaying(true);
     }
-  }
-
-  function handleAlbumsClick(Id) {
-    const path = {
-      pathname: "/album",
-      search: createSearchParams({ Id }).toString(),
-    };
-    navigate(path);
   }
 
   const formatViews = (views) => {
@@ -211,32 +202,7 @@ export default function SearchComponent() {
               </div>
             )}
           </div>
-          {albums && (
-            <div className="mt-6 w-[95vw] sm:w-full sm:mt-8 border p-4 rounded-xl shadow-lg">
-              <h2 className="text-xl sm:text-2xl font-bold mb-4">Albums</h2>
-              <ScrollArea className="w-full">
-                <div className="flex gap-4 pb-4 overflow-x-auto">
-                  {albums.map((album, index) => (
-                    <div
-                      onClick={() => handleAlbumsClick(album.id)}
-                      key={index}
-                      className="bg-secondary rounded-2xl p-3 sm:p-4 flex flex-col items-center flex-shrink-0"
-                    >
-                      <img
-                        src={album.image[2].url}
-                        alt={album.name}
-                        loading="lazy"
-                        className="w-24 h-24 sm:w-32 sm:h-32 object-cover hover:scale-105 transition-all rounded-lg mb-2"
-                      />
-                      <Label className="text-center w-32 sm:w-32 text-xs sm:text-sm truncate ">
-                        {album.name}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            </div>
-          )}
+          <Albums search={search} />
           <RandomArtists search={search} />
         </div>
       </div>
