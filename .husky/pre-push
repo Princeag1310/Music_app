@@ -1,6 +1,5 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-current_branch=$(git symbolic-ref --short HEAD)
 # protected branch name
 protected_branch="main" 
 
