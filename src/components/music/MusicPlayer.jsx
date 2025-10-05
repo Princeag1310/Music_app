@@ -14,7 +14,6 @@ function MusicPlayer() {
   const [musicPlayerDrawer, setMusicPlayerDrawer] = React.useState(false);
   const [song, setSong] = React.useState();
   
-  // Get state from Zustand stores
   const { songs } = useFetch();
   const {
     musicId,
@@ -35,7 +34,6 @@ function MusicPlayer() {
     playPrevious
   } = useStore();
 
-  // Keyboard shortcuts
   useKeyboardShortcuts({
     togglePlayPause: () => setIsPlaying(!isPlaying),
     nextTrack: () => playNext(),
@@ -52,7 +50,6 @@ function MusicPlayer() {
     toggleShuffle: () => setShuffle(!shuffle),
   });
 
-  // Fetch song when musicId changes
   useEffect(() => {
     async function fetchSong() {
       if (!musicId) return;
@@ -73,14 +70,12 @@ function MusicPlayer() {
     fetchSong();
   }, [musicId, setIsPlaying]);
 
-  // Set queue when songs change
   useEffect(() => {
     if (songs) {
       setQueue(songs);
     }
   }, [songs, setQueue]);
 
-  // Handlers
   const handlePlayPause = () => setIsPlaying(!isPlaying);
 
   const handleVolumeChange = (e) => {
@@ -124,33 +119,35 @@ function MusicPlayer() {
   return (
     <>
       <Drawer open={musicPlayerDrawer} onOpenChange={setMusicPlayerDrawer}>
-        <DrawerTrigger asChild>
-          <Button
-            variant="outline"
-            aria-label="Open player"
-            style={{ animationDuration: "5s"}}
-            className={`absolute right-6 bottom-6 p-0 h-16 w-16 rounded-full overflow-hidden shadow-lg ring-1 ring-white/10 hover:ring-white/30 transition ${
-              isPlaying && (song?.image?.[1]?.url ? "animate-spin" : "")
-            }`}
-          >
-            {song?.image?.[1]?.url ? (
-              <img
-                className="h-full w-full object-cover"
-                src={song?.image?.[1]?.url}
-                alt=""
-                loading="lazy"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = "/image.png";
-                }}
-              />
-            ) : (
-              <div className="h-full w-full grid place-items-center bg-black/30 text-white">
-                <Play className="h-6 w-6" />
-              </div>
-            )}
-          </Button>
-        </DrawerTrigger>
+        {musicId && (
+          <DrawerTrigger asChild>
+            <Button
+              variant="outline"
+              aria-label="Open player"
+              style={{ animationDuration: "5s"}}
+              className={`absolute right-6 bottom-6 p-0 h-16 w-16 rounded-full overflow-hidden shadow-lg ring-1 ring-white/10 hover:ring-white/30 transition ${
+                isPlaying && (song?.image?.[1]?.url ? "animate-spin" : "")
+              }`}
+            >
+              {song?.image?.[1]?.url ? (
+                <img
+                  className="h-full w-full object-cover"
+                  src={song?.image?.[1]?.url}
+                  alt=""
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "/image.png";
+                  }}
+                />
+              ) : (
+                <div className="h-full w-full grid place-items-center bg-black/30 text-white">
+                  <Play className="h-6 w-6" />
+                </div>
+              )}
+            </Button>
+          </DrawerTrigger>
+        )}
         <DrawerContent className="h-[15dvh]">
           <DrawerTitle hidden />
           <div
@@ -241,7 +238,7 @@ function MusicPlayer() {
 
       <ReactPlayer
         ref={playerRef}
-        key={musicId} // Force re-render on song change to prevent multiple audio instances
+        key={musicId}
         url={song?.downloadUrl?.[4]?.url || ""}
         playing={isPlaying}
         volume={muted ? 0 : volume}
@@ -249,7 +246,7 @@ function MusicPlayer() {
         onDuration={handleDuration}
         onPlay={() => setIsPlaying(true)}  
         onPause={() => setIsPlaying(false)}
-        onEnded={playNext} // Use centralized next function
+        onEnded={playNext}
         width="0"
         height="0"
       />
