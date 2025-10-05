@@ -122,7 +122,8 @@ function MusicPlayer() {
   const VolumeIcon = muted || volume === 0 ? VolumeX : volume > 0.5 ? Volume2 : Volume1;
 
   return (
-    <>
+    song &&
+    ( <> 
       <Drawer open={musicPlayerDrawer} onOpenChange={setMusicPlayerDrawer}>
         <DrawerTrigger asChild>
           <Button
@@ -253,7 +254,7 @@ function MusicPlayer() {
         width="0"
         height="0"
       />
-    </>
+    </>)
   );
 }
 
