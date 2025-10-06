@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Api from "../../Api";
 import { getImageColors } from "../color/ColorGenrator";
 import { ScrollArea } from "../ui/scroll-area";
 import { useStore } from "../../zustand/store";
-import { Play, Pause, Share2, Shuffle } from "lucide-react";
+import { Play, Pause, Share2, Shuffle, ArrowLeft, Music2 } from "lucide-react";
 import Menu from "../Menu";
 import Like from "../ui/Like";
 import { toast } from "sonner";
+import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
 
 function Artist() {
   const [data, setData] = useState();
@@ -18,6 +20,9 @@ function Artist() {
   const url = useLocation();
   const { setMusicId, musicId, isPlaying, setIsPlaying, setQueue, currentArtistId, setArtistId } =
     useStore();
+  const navigate = useNavigate();
+  let url = useLocation();
+  const { setMusicId, musicId, isPlaying, setIsPlaying, setQueue } = useStore();
   const artistId = url.search.split("=")[1];
 
   // Function to calculate luminance and determine text color
@@ -51,10 +56,15 @@ function Artist() {
           // Determine text color based on background brightness
           setTextColor(getTextColor(dominantColor));
         });
+        getImageColors(res.data.data.image[2].url).then(
+          ({ averageColor, dominantColor }) => {
+            setBgColor({ bg1: averageColor, bg2: dominantColor });
+          }
+        );
       } catch (error) {
         toast.error("Failed to load artist data.");
         console.error("Error fetching artist data:", error);
-        setData(null); // Ensure data is null on error to trigger "Artist not found" UI
+        setData(null);
       } finally {
         setIsLoading(false);
       }
@@ -62,7 +72,10 @@ function Artist() {
     fetching();
   }, [artistId, setQueue]);
 
-  function handleSongClick(song) {
+  function handleSongClick(song, e) {
+    if (e) {
+      e.stopPropagation();
+    }
     if (song.id !== musicId) {
       setMusicId(song.id);
       setArtistId(artistId);
@@ -82,17 +95,30 @@ function Artist() {
       } else {
         setIsPlaying(true);
       }
+      setIsPlaying(true);
+    } else {
+      setIsPlaying(!isPlaying);
+    }
+  }
+
+  function handlePlayAll(e) {
+    e.stopPropagation();
+    if (isPlaying) {
+      setIsPlaying(false);
     } else {
       if (data.topSongs?.length > 0) {
         setQueue(data.topSongs);
         setMusicId(data.topSongs[0].id);
         setIsPlaying(true);
         setArtistId(artistId);
+      } else {
+        setIsPlaying(true);
       }
     }
   }
 
-  function handleShuffle() {
+  function handleShuffle(e) {
+    e.stopPropagation();
     if (data?.topSongs?.length > 0) {
       const randomIndex = Math.floor(Math.random() * data.topSongs.length);
       setMusicId(data.topSongs[randomIndex].id);
@@ -101,12 +127,27 @@ function Artist() {
     }
   }
 
+  function handleTogglePlayPause(e) {
+    e.stopPropagation();
+    setIsPlaying(!isPlaying);
+  }
+
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="text-center space-y-4">
-          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="text-lg text-muted-foreground">Loading artist...</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center space-y-6">
+          <div className="relative w-20 h-20 mx-auto">
+            <div className="absolute inset-0 border-4 border-primary/30 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          </div>
+          <div className="space-y-2">
+            <p className="text-lg font-medium">Loading artist...</p>
+            <div className="flex justify-center gap-1">
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.2s]"></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.4s]"></div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -118,6 +159,18 @@ function Artist() {
         <div className="text-center space-y-4">
           <p className="text-xl text-muted-foreground">Artist not found</p>
           <p className="text-sm text-muted-foreground">Please try again later</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center space-y-6 animate-in fade-in zoom-in duration-500">
+          <div className="w-24 h-24 mx-auto bg-muted rounded-full flex items-center justify-center">
+            <Music2 className="w-12 h-12 text-muted-foreground" />
+          </div>
+          <div className="space-y-2">
+            <p className="text-2xl font-semibold">Artist not found</p>
+            <p className="text-muted-foreground">The artist you're looking for doesn't exist</p>
+          </div>
+          <Button onClick={() => navigate(-1)} variant="outline">
+            Go Back
+          </Button>
         </div>
       </div>
     );
@@ -126,7 +179,7 @@ function Artist() {
   return (
     <ScrollArea className="h-[100dvh]">
       <div className="min-h-screen pb-32">
-        {/* Hero Section */}
+        {/* Enhanced Hero Section */}
         <div
           className="relative w-full pb-8"
           style={{
@@ -146,21 +199,69 @@ function Artist() {
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-center lg:items-start">
               {/* Artist Image */}
               <div className="relative mx-auto sm:mx-0 flex-shrink-0 hover:scale-105 transition-transform">
+          className="relative w-full overflow-hidden"
+          style={{
+            background: bgColor
+              ? `linear-gradient(180deg, ${bgColor.bg1} 0%, ${bgColor.bg2} 45%, rgba(0,0,0,0.4) 100%)`
+              : "linear-gradient(180deg, hsl(var(--muted)) 0%, rgba(0,0,0,0.4) 100%)",
+          }}
+        >
+          {/* Animated Background Blur Elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div 
+              className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-20 animate-pulse"
+              style={{ background: bgColor?.bg1 || 'hsl(var(--primary))' }}
+            />
+            <div 
+              className="absolute bottom-0 left-0 w-96 h-96 rounded-full blur-3xl opacity-20 animate-pulse [animation-delay:1s]"
+              style={{ background: bgColor?.bg2 || 'hsl(var(--primary))' }}
+            />
+          </div>
+
+          {/* Back Button */}
+          <div className="absolute top-4 left-4 z-20 animate-in fade-in slide-in-from-left duration-500">
+            <Button
+              onClick={() => navigate(-1)}
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "rounded-full bg-background/10 backdrop-blur-xl",
+                "hover:bg-background/30 transition-all duration-300",
+                "border border-white/10 hover:border-white/30",
+                "hover:scale-110 active:scale-95",
+                "shadow-lg hover:shadow-2xl"
+              )}
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </div>
+
+          <div className="container mx-auto px-4 py-12 lg:py-16 pt-20 relative z-10">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center lg:items-start">
+              {/* Premium Artist Image */}
+              <div className="relative group animate-in fade-in zoom-in duration-700">
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary via-primary/50 to-primary rounded-2xl blur-xl opacity-0 group-hover:opacity-75 transition-all duration-500"></div>
                 <div
-                  className={`w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden shadow-2xl transition-opacity duration-300 ${
+                  className={cn(
+                    "relative w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72",
+                    "rounded-2xl overflow-hidden",
+                    "shadow-2xl ring-4 ring-white/10",
+                    "transition-all duration-500",
+                    "group-hover:ring-white/30 group-hover:shadow-[0_25px_60px_-12px_rgba(8,112,184,0.8)]",
                     imageLoaded ? "opacity-100" : "opacity-0"
-                  }`}
+                  )}
                 >
                   <img
                     src={data.image[2].url || "/placeholder.svg"}
                     alt={data.name}
-                    loading="lazy"
-                    className="w-full h-full object-cover"
+                    loading="eager"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     onLoad={() => setImageLoaded(true)}
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
                 {!imageLoaded && (
-                  <div className="absolute inset-0 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 rounded-2xl bg-muted animate-pulse"></div>
+                  <div className="absolute inset-0 w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-2xl bg-muted animate-pulse"></div>
                 )}
               </div>
 
@@ -187,6 +288,16 @@ function Artist() {
                           : "hsl(var(--contrast-foreground-light))",
                     }}
                   >
+              {/* Premium Artist Info */}
+              <div className="flex-1 text-center lg:text-left space-y-8 max-w-2xl">
+                <div className="space-y-4 animate-in fade-in slide-in-from-right duration-700">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                    <span className="text-sm font-medium uppercase tracking-widest">
+                      Artist
+                    </span>
+                  </div>
+                  <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-none tracking-tight bg-gradient-to-br from-white via-white to-white/60 bg-clip-text text-transparent">
                     {data.name}
                   </h1>
                 </div>
@@ -194,18 +305,47 @@ function Artist() {
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-3 justify-center sm:justify-start pt-2">
                   <button
+                {/* Premium Action Buttons */}
+                <div className="flex flex-wrap gap-4 justify-center lg:justify-start animate-in fade-in slide-in-from-right duration-700 delay-150">
+                  <Button
                     onClick={handlePlayAll}
-                    className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-full font-medium transition-all duration-200 hover:scale-105 shadow-lg min-h-[44px]"
+                    size="lg"
+                    className={cn(
+                      "gap-3 rounded-full px-8 h-14 text-base font-semibold",
+                      "bg-primary hover:bg-primary/90",
+                      "shadow-[0_8px_30px_rgb(8,112,184,0.5)]",
+                      "hover:shadow-[0_12px_40px_rgb(8,112,184,0.7)]",
+                      "hover:scale-105 active:scale-95",
+                      "transition-all duration-300",
+                      "group"
+                    )}
                   >
                     {!isPlaying || artistId != currentArtistId ? (
                       <Play className="w-5 h-5" />
+                    {!isPlaying ? (
+                      <>
+                        <Play className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" />
+                        <span>Play All</span>
+                      </>
                     ) : (
-                      <Pause className="w-5 h-5" />
+                      <>
+                        <Pause className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" />
+                        <span>Pause</span>
+                      </>
                     )}
-                  </button>
-                  <button
+                  </Button>
+
+                  <Button
                     onClick={handleShuffle}
-                    className="flex items-center gap-2 bg-secondary hover:bg-secondary/80 text-secondary-foreground px-6 py-3 rounded-full font-medium transition-all duration-200 hover:scale-105 min-h-[44px]"
+                    variant="secondary"
+                    size="lg"
+                    className={cn(
+                      "gap-3 rounded-full px-8 h-14 text-base font-semibold",
+                      "bg-white/10 hover:bg-white/20 backdrop-blur-sm",
+                      "border border-white/20 hover:border-white/40",
+                      "hover:scale-105 active:scale-95",
+                      "transition-all duration-300"
+                    )}
                   >
                     <Shuffle className="w-5 h-5" />
                     <span className="hidden xs:inline">Shuffle</span>
@@ -219,45 +359,75 @@ function Artist() {
                   >
                     <Share2 className="w-5 h-5" />
                   </button>
+                    <span className="hidden sm:inline">Shuffle</span>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className={cn(
+                      "gap-3 rounded-full px-8 h-14 text-base font-semibold",
+                      "bg-white/10 hover:bg-white/20 backdrop-blur-sm",
+                      "border border-white/20 hover:border-white/40",
+                      "hover:scale-105 active:scale-95",
+                      "transition-all duration-300"
+                    )}
+                  >
+                    <Share2 className="w-6 h-6" />
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Top Songs Section */}
-        <div className="container mx-auto px-3 sm:px-4 py-8">
+        {/* Premium Songs Section */}
+        <div className="container mx-auto px-4 py-10">
           <div className="space-y-6">
-            <div className="flex items-center justify-between px-1">
-              <h2 className="text-2xl lg:text-3xl font-bold">Popular</h2>
+            <div className="flex items-center justify-between px-2">
+              <div className="space-y-1">
+                <h2 className="text-3xl lg:text-4xl font-bold tracking-tight">Popular Tracks</h2>
+                <p className="text-sm text-muted-foreground">{data.topSongs?.length} songs</p>
+              </div>
             </div>
 
-            {/* Songs List - Improved Mobile Layout */}
-            <div className="space-y-1">
+            {/* Premium Songs Grid */}
+            <div className="space-y-2">
               {data.topSongs.map((song, index) => (
                 <div
                   key={song.id || index}
-                  className={`group rounded-lg transition-all duration-200 hover:bg-muted/50 ${
-                    song.id === musicId ? "bg-muted" : ""
-                  } cursor-pointer`}
-                  onClick={() => handleSongClick(song)}
+                  className={cn(
+                    "group rounded-xl transition-all duration-300",
+                    "hover:bg-gradient-to-r hover:from-muted/50 hover:to-transparent",
+                    "cursor-pointer relative overflow-hidden",
+                    song.id === musicId && "bg-gradient-to-r from-muted to-transparent"
+                  )}
+                  onClick={(e) => handleSongClick(song, e)}
                 >
+                  {/* Animated hover effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 pointer-events-none" />
+
                   {/* Mobile Layout */}
-                  <div className="sm:hidden">
-                    <div className="flex items-center gap-3 p-3 min-h-[60px]">
-                      {/* Track Number / Play Button */}
-                      <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
+                  <div className="sm:hidden relative">
+                    <div className="flex items-center gap-4 p-4">
+                      <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
                         <span
-                          className={`text-sm text-muted-foreground group-hover:hidden ${
-                            song.id === musicId ? "hidden" : ""
-                          }`}
+                          className={cn(
+                            "text-sm font-medium text-muted-foreground",
+                            "group-hover:hidden transition-all",
+                            song.id === musicId && "hidden"
+                          )}
                         >
                           {index + 1}
                         </span>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleSongClick(song);
+                            if (song.id === musicId) {
+                              handleTogglePlayPause(e);
+                            } else {
+                              handleSongClick(song, e);
+                            }
                           }}
                           className={`w-8 h-8 flex items-center justify-center transition-all duration-200 ${
                             song.id === musicId ? "block" : "hidden group-hover:block"
@@ -273,71 +443,85 @@ function Artist() {
                             />
                           ) : (
                             <Play className="w-8 h-5 text-primary cursor-pointer hover:scale-125 transition-transform" />
+                          className={cn(
+                            "w-10 h-10 flex items-center justify-center",
+                            "rounded-full bg-primary/10 hover:bg-primary/20",
+                            "transition-all duration-200",
+                            song.id === musicId ? "flex" : "hidden group-hover:flex"
+                          )}
+                        >
+                          {isPlaying && song.id === musicId ? (
+                            <Pause className="w-5 h-5 text-primary" fill="currentColor" />
+                          ) : (
+                            <Play className="w-5 h-5 text-primary" fill="currentColor" />
                           )}
                         </button>
                       </div>
 
-                      {/* Song Image */}
-                      <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
+                      <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 shadow-lg ring-2 ring-transparent group-hover:ring-primary/20 transition-all">
                         <img
                           src={song.image[1].url || "/placeholder.svg"}
                           alt={song.name}
                           loading="lazy"
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                       </div>
 
-                      {/* Song Info - More space on mobile */}
-                      <div className="flex-1 min-w-0 pr-2">
+                      <div className="flex-1 min-w-0">
                         <h3
                           className={`font-medium text-sm leading-5 ${
                             song.id === musicId ? "text-primary" : "text-foreground"
                           }`}
+                          className={cn(
+                            "font-semibold text-sm leading-tight mb-1",
+                            song.id === musicId ? "text-primary" : "text-foreground"
+                          )}
                           style={{
                             display: "-webkit-box",
                             WebkitLineClamp: 2,
                             WebkitBoxOrient: "vertical",
                             overflow: "hidden",
-                            wordBreak: "break-word",
                           }}
                         >
                           {song.name}
                         </h3>
+                        <p className="text-xs text-muted-foreground">
+                          {Math.floor(song.duration / 60)}:{(song.duration % 60).toString().padStart(2, "0")}
+                        </p>
                       </div>
 
-                      {/* Like Button - Mobile */}
-                      <div className="flex-shrink-0 w-8 flex items-center justify-center">
-                        <Like songId={song.id} />
-                      </div>
-
-                      {/* Menu Button - Always visible on mobile for better UX */}
-                      <div className="flex-shrink-0">
-                        <button
-                          onClick={(e) => e.stopPropagation()}
-                          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
-                        >
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <Like songId={song.id} />
+                        </div>
+                        <div onClick={(e) => e.stopPropagation()}>
                           <Menu song={song} />
-                        </button>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Desktop/Tablet Layout */}
-                  <div className="hidden sm:block">
-                    <div className="flex items-center gap-4 p-3 lg:p-4">
-                      {/* Track Number / Play Button */}
-                      <div className="w-6 flex items-center justify-center flex-shrink-0">
+                  {/* Desktop Layout */}
+                  <div className="hidden sm:block relative">
+                    <div className="flex items-center gap-6 p-4 lg:p-5">
+                      <div className="w-8 flex items-center justify-center flex-shrink-0">
                         <span
-                          className={`text-sm text-muted-foreground group-hover:hidden ${
-                            song.id === musicId ? "hidden" : ""
-                          }`}
+                          className={cn(
+                            "text-sm font-medium text-muted-foreground",
+                            "group-hover:hidden transition-all",
+                            song.id === musicId && "hidden"
+                          )}
                         >
                           {index + 1}
                         </span>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleSongClick(song);
+                            if (song.id === musicId) {
+                              handleTogglePlayPause(e);
+                            } else {
+                              handleSongClick(song, e);
+                            }
                           }}
                           className={`w-6 h-6 flex items-center justify-center transition-all duration-200 ${
                             song.id === musicId ? "block" : "hidden group-hover:block"
@@ -353,48 +537,54 @@ function Artist() {
                             />
                           ) : (
                             <Play className="w-6 h-5 text-primary cursor-pointer hover:scale-125 transition-transform" />
+                          className={cn(
+                            "w-8 h-8 flex items-center justify-center",
+                            "rounded-full bg-primary/10 hover:bg-primary/20",
+                            "transition-all duration-200",
+                            song.id === musicId ? "flex" : "hidden group-hover:flex"
+                          )}
+                        >
+                          {isPlaying && song.id === musicId ? (
+                            <Pause className="w-4 h-4 text-primary" fill="currentColor" />
+                          ) : (
+                            <Play className="w-4 h-4 text-primary" fill="currentColor" />
                           )}
                         </button>
                       </div>
 
-                      {/* Song Image */}
-                      <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
+                      <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-xl overflow-hidden flex-shrink-0 shadow-lg ring-2 ring-transparent group-hover:ring-primary/30 transition-all duration-300">
                         <img
                           src={song.image[1].url || "/placeholder.svg"}
                           alt={song.name}
                           loading="lazy"
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                       </div>
 
-                      {/* Song Info */}
                       <div className="flex-1 min-w-0">
                         <h3
                           className={`font-medium truncate ${song.id === musicId ? "text-primary" : "text-foreground"}`}
+                          className={cn(
+                            "font-semibold text-base mb-1 truncate",
+                            song.id === musicId ? "text-primary" : "text-foreground"
+                          )}
                         >
                           {song.name}
                         </h3>
                         <p className="text-sm text-muted-foreground truncate">{data.name}</p>
                       </div>
 
-                      {/* Duration */}
-                      <div className="text-sm text-muted-foreground font-mono">
-                        {Math.floor(song.duration / 60)}:
-                        {(song.duration % 60).toString().padStart(2, "0")}
+                      <div className="text-sm text-muted-foreground font-mono tabular-nums">
+                        {Math.floor(song.duration / 60)}:{(song.duration % 60).toString().padStart(2, "0")}
                       </div>
 
-                      <div className="flex-shrink-0 w-8 flex items-center justify-center">
-                        <Like songId={song.id} />
-                      </div>
-
-                      {/* Menu Button */}
-                      <div className="flex-shrink-0">
-                        <button
-                          onClick={(e) => e.stopPropagation()}
-                          className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors opacity-0 group-hover:opacity-100"
-                        >
+                      <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <Like songId={song.id} />
+                        </div>
+                        <div onClick={(e) => e.stopPropagation()}>
                           <Menu song={song} />
-                        </button>
+                        </div>
                       </div>
                     </div>
                   </div>
