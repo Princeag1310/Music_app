@@ -16,16 +16,8 @@ function Artist() {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [textColor, setTextColor] = useState("white");
   const url = useLocation();
-  const {
-    setMusicId,
-    musicId,
-    isPlaying,
-    setIsPlaying,
-    setQueue,
-    currentArtistId,
-    setArtistId,
-    destroy,
-  } = useStore();
+  const { setMusicId, musicId, isPlaying, setIsPlaying, setQueue, currentArtistId, setArtistId } =
+    useStore();
   const artistId = url.search.split("=")[1];
 
   // Function to calculate luminance and determine text color
@@ -75,8 +67,11 @@ function Artist() {
       setMusicId(song.id);
       setArtistId(artistId);
     } else {
-      setIsPlaying(true);
-      setArtistId(artistId);
+      if (isPlaying) {
+        setIsPlaying(false);
+      } else {
+        setIsPlaying(true);
+      }
     }
   }
 
@@ -89,7 +84,6 @@ function Artist() {
       }
     } else {
       if (data.topSongs?.length > 0) {
-        destroy();
         setQueue(data.topSongs);
         setMusicId(data.topSongs[0].id);
         setIsPlaying(true);

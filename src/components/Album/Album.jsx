@@ -33,7 +33,6 @@ export default function Album() {
     setQueue,
     currentAlbumId,
     setAlbumId,
-    destroy,
     playlist,
     setPlaylist,
     setLikedSongs,
@@ -93,8 +92,11 @@ export default function Album() {
       setMusicId(song.id);
       setAlbumId(albumId);
     } else {
-      setIsPlaying(true);
-      setAlbumId(albumId);
+      if (isPlaying) {
+        setIsPlaying(false);
+      } else {
+        setIsPlaying(true);
+      }
     }
   }
 
@@ -107,7 +109,6 @@ export default function Album() {
       }
     } else {
       if (songs?.length > 0) {
-        destroy();
         setQueue(songs);
         setMusicId(songs[0].id);
         setIsPlaying(true);

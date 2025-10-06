@@ -202,24 +202,4 @@ export const useStore = create((set, get) => ({
     if (repeat === "one") set({ played: 0 });
     else playNext();
   },
-
-  destroy: () =>
-    set({
-      playlist: [],
-      isUser: false,
-      dialogOpen: false,
-      musicId: null,
-      currentAlbumId: null,
-      currentArtistId: null,
-      currentSong: null,
-      isPlaying: false,
-      queue: [],
-      likedSongs: [],
-      currentIndex: 0,
-      muted: false,
-      shuffle: false,
-      repeat: "none",
-      played: 0,
-      duration: 0,
-    }),
 }));
